@@ -1,0 +1,103 @@
+export default {
+  // Common
+  UNLOCK: 'Unlock',
+  LOCK: 'Lock',
+  CANCEL: 'Cancel',
+  WARNING: 'Warning',
+  ERROR: 'Error',
+  COPY: 'Copy',
+  
+  // Auth Modal
+  UNLOCK_TITLE: 'SafePassage: Unlock "{profileName}"',
+  MASTER_PASSWORD: 'Master Password',
+  MASTER_PASSWORD_DESC: 'Enter the master password for the database.',
+  UNLOCK_SUCCESS: 'Profile "{profileName}" has been unlocked.',
+  UNLOCK_FAILED: 'Unlock failed: {message}',
+  SESSION_EXPIRED: 'Session expired. Profile "{profileName}" has been locked.',
+  ALL_LOCKED: 'All databases have been safely locked.',
+  
+  // Commands & Notices (main.ts)
+  COMMAND_LOCK_ALL: 'Lock all SafePassage profiles',
+  COMMAND_UNLOCK_MANUAL: 'Unlock a specific profile',
+  NO_PROFILES_CONFIGURED: 'No profiles configured. Please check the settings tab.',
+  ALREADY_UNLOCKED: 'All profiles are already unlocked.',
+  KEYRING_AUTO_UNLOCKED: 'Profile "{profileName}" has been automatically unlocked via keyring.',
+  PROFILE_UNLOCKED_NOTICE: 'Profile "{profileName}" has been unlocked.',
+  
+  // Secret Editing Modal (2단계)
+  INSERT_SECRET: 'Insert Secret',
+  EDIT_SECRET: 'Edit Secret',
+  ADD_FIELD: 'Add Custom Field',
+  SAVE: 'Save',
+  SELECT_PROFILE: 'Select Profile',
+  ENTRY_PATH: 'Entry Path (e.g. Group/Entry)',
+  USERNAME: 'Username',
+  PASSWORD: 'Password',
+  URL: 'URL',
+  NOTES: 'Notes',
+  CUSTOM_FIELDS: 'Custom Fields',
+  FIELD_NAME: 'Field Name',
+  FIELD_VALUE: 'Field Value',
+  GENERATE_PASSWORD: 'Generate Password',
+  READ_ONLY_WARNING: 'This profile is read-only.',
+  DATABASE_LOCKED_WARNING: 'Profile is locked. Please unlock first.',
+  SUCCESS_SAVE: 'Secret saved successfully.',
+  SUCCESS_SAVE_TOKEN: 'Secret saved and token inserted.',
+  FIELD_REQUIRED: 'Entry Path, Username, and Password are required.',
+  
+  // Clipboard
+  COPIED_TIMEOUT: 'Copied to clipboard. (Auto-clears in {seconds}s for security.)',
+  COPIED: 'Copied to clipboard.',
+  CLIPBOARD_CLEARED: 'Sensitive information in the clipboard has been safely cleared.',
+  CLIPBOARD_FAILED: 'Failed to copy to clipboard.',
+  
+  // Chips & Errors
+  MISSING_PROFILE: 'Missing Profile: {profileId}',
+  MISSING_PROFILE_DESC: 'Profile "{profileId}" does not exist in settings.',
+  PROFILE_LOCKED: '{profileName} (Locked)',
+  PROFILE_LOCKED_DESC: 'Click to unlock the database.',
+  MISSING_ENTRY: 'Missing Entry: {entryName}',
+  MISSING_ENTRY_DESC: 'Entry not found at path: {entryPath}',
+  MISSING_FIELD: 'Missing Field: {fieldName}',
+  MISSING_FIELD_DESC: 'Field "{fieldName}" does not exist in this entry.',
+  MISSING_FIELD_NOTICE: 'Cannot copy because the field does not exist. (Field: {fieldName})',
+  CLICK_TO_COPY: 'Click to copy to clipboard.',
+
+  // Code Block
+  ENTRY_NAME: 'Entry Name',
+  ENTRY_MISSING: 'Entry Missing',
+  PROFILE_IS_LOCKED_MSG: '🔒 Profile "{profileName}" is locked. ',
+  MISSING_PROFILE_MSG: '⚠ Error: Profile "{profileId}" not found.',
+  MISSING_PROFILE_PROPERTY: '⚠ Error: "profile" property is not specified.',
+  EMPTY_FIELD_TEXT: '(empty)',
+  EMPTY_FIELD_DESC: 'Field "{fieldName}" does not exist in this data.',
+
+  // Settings
+  SETTINGS_TITLE: 'SafePassage Settings',
+  GLOBAL_SECURITY_SETTINGS: 'Global Security & Clipboard Settings',
+  CLIPBOARD_TIMEOUT: 'Clipboard Clear Timeout (seconds)',
+  CLIPBOARD_TIMEOUT_DESC: 'Time to clear clipboard after copying credentials. (Set to 0 to disable auto-clear)',
+  KEYRING_ENABLE: 'Enable Master Keyring',
+  KEYRING_ENABLE_DESC: 'Caches master passwords in secure local session memory during the session for automatic unlocking.',
+  DATABASE_PROFILES: 'KeePass Database Profiles',
+  NO_PROFILES_MSG: 'No profiles registered. Add a new profile.',
+  ADD_NEW_PROFILE: 'Add New Profile',
+  PROFILE_NAME: 'Profile Name',
+  DATABASE_PATH: 'Database File Path',
+  DATABASE_PATH_DESC: 'Local absolute file path (e.g., /Users/username/passwords.kdbx)',
+  KEY_PATH: 'Key File Path (Optional)',
+  KEY_PATH_DESC: 'Local absolute file path (optional)',
+  READ_ONLY: 'Read-Only',
+  READ_ONLY_DESC: 'When enabled, writing to the database or modifying entries is prohibited.',
+  MANAGE_BY_KEYRING: 'Manage with Master Keyring',
+  MANAGE_BY_KEYRING_DESC: 'Specifies whether to manage the password of this profile with the keyring during the session.',
+  SESSION_LIFETIME: 'Session Expiry Lifetime',
+  SESSION_LIFETIME_DESC: 'Time until the database session expires after unlocking.',
+  DELETE_PROFILE: 'Delete Profile',
+  
+  // Session Lifetime Options
+  SESSION_SINGLE: 'Lock immediately after 1 lookup',
+  SESSION_5MIN: '5 Minutes',
+  SESSION_15MIN: '15 Minutes',
+  SESSION_FOREVER: 'Until Obsidian closes',
+};

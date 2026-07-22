@@ -1,0 +1,33 @@
+{
+  "name": "safe-passage",
+  "version": "0.1.0",
+  "description": "A secure, lightweight, and high-performance KeePass integration plugin for Obsidian, featuring WebAssembly Argon2 decryption, masked inline chips, and interactive credential tables.",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "version": "node scripts/version-bump.mjs && git add manifest.json versions.json"
+  },
+  "keywords": [
+    "obsidian",
+    "keepass",
+    "kdbx",
+    "encryption",
+    "credentials"
+  ],
+  "author": "Ji-ho Lee <search5@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "esbuild": "0.25.5",
+    "obsidian": "latest",
+    "tslib": "2.4.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@noble/hashes": "^2.0.1",
+    "hash-wasm": "^4.12.0",
+    "kdbxweb": "^2.1.1"
+  }
+}

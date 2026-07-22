@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+
+# Build outputs
+main.js
+
+# OS generated files
+.DS_Store
+
+# Obsidian local settings
+.obsidian/

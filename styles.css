@@ -1,0 +1,121 @@
+/* SafePassage 스타일 시트 */
+
+/* 인라인 마스킹 칩 */
+.sp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--background-secondary-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.85em;
+  font-family: var(--font-monospace);
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.sp-chip:hover {
+  background-color: var(--background-modifier-hover);
+  color: var(--text-normal);
+  border-color: var(--interactive-accent);
+}
+
+.sp-chip.locked {
+  border-style: dashed;
+}
+
+/* 필드가 없거나 에러가 발생한 경고 상태의 칩 */
+.sp-chip.warning {
+  border-color: var(--text-error);
+  background-color: rgba(var(--mono-rgb-100), 0.05);
+  color: var(--text-error);
+}
+
+.sp-chip.warning:hover {
+  background-color: rgba(var(--mono-rgb-100), 0.1);
+}
+
+.sp-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+}
+
+/* 크레덴셜 테이블 */
+.sp-table-container {
+  margin: 1em 0;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.sp-table th,
+.sp-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sp-table th {
+  background-color: var(--background-secondary);
+  font-weight: 600;
+}
+
+.sp-table tr:last-child td {
+  border-bottom: none;
+}
+
+.sp-table td.empty-field {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+/* 복사 버튼 */
+.sp-copy-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sp-copy-btn:hover:not(:disabled) {
+  background-color: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.sp-copy-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* 크레덴셜 테이블 타이틀 헤더 */
+.sp-table-title {
+  background-color: var(--background-secondary-alt);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: bold;
+  font-size: 0.95em;
+  color: var(--text-normal);
+  display: flex;
+  align-items: center;
+}
+.sp-table-title-text {
+  font-family: var(--font-interface);
+}
