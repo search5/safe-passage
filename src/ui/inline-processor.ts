@@ -42,11 +42,7 @@ function replaceTextWithWidget(el: HTMLElement, targetText: string, widget: HTML
     // 부모가 <code> 태그인 경우 인라인 코드 네모 박스 스타일 중화
     const parent = widget.parentElement;
     if (parent && parent.tagName === 'CODE') {
-      parent.style.background = 'none';
-      parent.style.border = 'none';
-      parent.style.padding = '0';
-      parent.style.margin = '0';
-      parent.style.boxShadow = 'none';
+      parent.addClass('sp-code-override');
     }
     return true;
   } catch (e) {

@@ -15,10 +15,10 @@ export class SafePassageSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl('h2', { text: t('SETTINGS_TITLE') });
+    new Setting(containerEl).setName(t('SETTINGS_TITLE')).setHeading();
 
     // 1. 전역 보안 설정
-    containerEl.createEl('h3', { text: t('GLOBAL_SECURITY_SETTINGS') });
+    new Setting(containerEl).setName(t('GLOBAL_SECURITY_SETTINGS')).setHeading();
 
     new Setting(containerEl)
       .setName(t('CLIPBOARD_TIMEOUT'))
@@ -46,7 +46,7 @@ export class SafePassageSettingTab extends PluginSettingTab {
         }));
 
     // 2. 프로필 목록
-    containerEl.createEl('h3', { text: t('DATABASE_PROFILES') });
+    new Setting(containerEl).setName(t('DATABASE_PROFILES')).setHeading();
 
     const profileContainer = containerEl.createDiv({ cls: 'kpn-profile-list' });
     this.renderProfiles(profileContainer);

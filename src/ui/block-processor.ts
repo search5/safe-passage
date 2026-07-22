@@ -82,8 +82,6 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
 
       if (!isUnlocked) {
         const lockDiv = container.createDiv({ cls: 'sp-table-locked' });
-        lockDiv.style.padding = '12px';
-        lockDiv.style.textAlign = 'center';
         lockDiv.createEl('span', { text: t('PROFILE_IS_LOCKED_MSG', { profileName: profile.name }) });
         
         const unlockBtn = lockDiv.createEl('button', { text: t('UNLOCK') });
@@ -138,8 +136,7 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
           }
 
           // 마스킹 처리된 값 표시
-          const maskSpan = td.createSpan({ text: '••••••••' });
-          maskSpan.style.marginRight = '8px';
+          const maskSpan = td.createSpan({ text: '••••••••', cls: 'sp-table-mask' });
 
           // 복사 버튼 추가
           const copyBtn = td.createEl('button', { cls: 'sp-copy-btn' });

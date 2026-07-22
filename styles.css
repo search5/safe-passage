@@ -119,3 +119,68 @@
 .sp-table-title-text {
   font-family: var(--font-interface);
 }
+
+/* 1. 테이블 잠금 정보 스타일 (block-processor.ts) */
+.sp-table-locked {
+  padding: 12px;
+  text-align: center;
+}
+
+/* 2. 마스킹 영역 마진 (block-processor.ts) */
+.sp-table-mask {
+  margin-right: 8px;
+}
+
+/* 3. 비밀 데이터 추가/수정 모달 경고창 및 상태 (edit-secret-modal.ts) */
+.sp-warning-container {
+  display: block;
+  background-color: rgba(255, 165, 0, 0.1);
+  border: 1px solid orange;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.sp-warning-container.hidden {
+  display: none;
+}
+.sp-form-disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* 4. 코드 요소 스타일 중화 (inline-processor.ts) */
+code.sp-code-override {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+/* 5. 커스텀 필드 리스트 및 요소 (edit-secret-modal.ts) */
+.sp-custom-field-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.sp-input-flex-1 {
+  flex: 1;
+}
+.sp-input-flex-2 {
+  flex: 2;
+}
+.sp-eye-btn {
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.sp-delete-btn {
+  padding: 4px 8px;
+  background-color: var(--text-error);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+

@@ -54,9 +54,7 @@ export class EditSecretModal extends Modal {
       });
 
     // 잠금 상태 경고 영역
-    const warningDiv = contentEl.createDiv({
-      attr: { style: 'margin: 10px 0; padding: 10px; border-radius: 4px; display: none;' }
-    });
+    const warningDiv = contentEl.createDiv({ cls: 'sp-warning-container hidden' });
 
     // 2. 기본 정보 필드 입력 폼
     const formDiv = contentEl.createDiv();
@@ -147,16 +145,14 @@ export class EditSecretModal extends Modal {
     container.empty();
 
     this.customFields.forEach((field, index) => {
-      const row = container.createDiv({
-        attr: { style: 'display: flex; gap: 10px; margin-bottom: 8px; align-items: center;' }
-      });
+      const row = container.createDiv({ cls: 'sp-custom-field-row' });
 
       // 필드명 입력
       const nameInput = row.createEl('input', {
         type: 'text',
         placeholder: t('FIELD_NAME'),
         value: field.name,
-        attr: { style: 'flex: 1;' }
+        cls: 'sp-input-flex-1'
       });
       nameInput.addEventListener('input', () => {
         field.name = nameInput.value.trim();
@@ -167,7 +163,7 @@ export class EditSecretModal extends Modal {
         type: 'password',
         placeholder: t('FIELD_VALUE'),
         value: field.value,
-        attr: { style: 'flex: 2;' }
+        cls: 'sp-input-flex-2'
       });
       valueInput.addEventListener('input', () => {
         field.value = valueInput.value;
@@ -176,7 +172,7 @@ export class EditSecretModal extends Modal {
       // 필드 표시 보기 토글 단추
       const eyeBtn = row.createEl('button', {
         text: '👁',
-        attr: { style: 'padding: 4px 8px; cursor: pointer;' }
+        cls: 'sp-eye-btn'
       });
       eyeBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -186,7 +182,7 @@ export class EditSecretModal extends Modal {
       // 필드 삭제 버튼
       const deleteBtn = row.createEl('button', {
         text: '✕',
-        attr: { style: 'padding: 4px 8px; background-color: var(--text-error); color: white; border: none; border-radius: 4px; cursor: pointer;' }
+        cls: 'sp-delete-btn'
       });
       deleteBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -207,9 +203,7 @@ export class EditSecretModal extends Modal {
     const isUnlocked = this.plugin.kdbxService.isUnlocked(profile.id);
 
     if (!isUnlocked) {
-      warningDiv.style.display = 'block';
-      warningDiv.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
-      warningDiv.style.border = '1px solid orange';
+      warningDiv.removeClass('hidden');
       warningDiv.empty();
       warningDiv.createSpan({ text: t('DATABASE_LOCKED_WARNING') + ' ' });
       
@@ -221,12 +215,10 @@ export class EditSecretModal extends Modal {
         }
       });
 
-      formDiv.style.pointerEvents = 'none';
-      formDiv.style.opacity = '0.4';
+      formDiv.addClass('sp-form-disabled');
     } else {
-      warningDiv.style.display = 'none';
-      formDiv.style.pointerEvents = 'auto';
-      formDiv.style.opacity = '1';
+      warningDiv.addClass('hidden');
+      formDiv.removeClass('sp-form-disabled');
     }
   }
 
