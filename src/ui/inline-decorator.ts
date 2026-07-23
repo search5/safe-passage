@@ -6,6 +6,14 @@ import SafePassagePlugin from '../main';
 
 export const refreshChipsEffect = StateEffect.define<void>();
 
+// registerEditorExtension()이 공식적으로 넘겨주는 EditorView들을 자체 등록해두고,
+// 외부(main.ts)에서 Obsidian의 비공개 Editor.cm에 접근하지 않고도 dispatch할 수 있게 함
+const activeEditorViews = new Set<EditorView>();
+
+export function getActiveEditorViews(): EditorView[] {
+  return Array.from(activeEditorViews);
+}
+
 class SpTokenWidget extends WidgetType {
   private readonly isUnlockedSnapshot: boolean;
 
@@ -52,8 +60,7 @@ function parseTokensFromText(text: string): { from: number; to: number; token: T
 }
 
 function buildDecorations(view: EditorView, plugin: SafePassagePlugin): DecorationSet {
-  const isLivePreview = view.state.field(editorLivePreviewField as any, false) ?? false;
-  console.log(`[SafePassage] buildDecorations() 시작, isLivePreview: ${isLivePreview}`);
+  const isLivePreview = view.state.field(editorLivePreviewField, false) ?? false;
   const builder = new RangeSetBuilder<Decoration>();
   const cursorPos = view.state.selection.main.head;
 
@@ -92,9 +99,12 @@ export function buildEditorExtension(plugin: SafePassagePlugin): Extension {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet;
+      private readonly view: EditorView;
 
       constructor(view: EditorView) {
+        this.view = view;
         this.decorations = buildDecorations(view, plugin);
+        activeEditorViews.add(view);
       }
 
       update(update: ViewUpdate) {
@@ -104,6 +114,10 @@ export function buildEditorExtension(plugin: SafePassagePlugin): Extension {
         if (update.docChanged || update.viewportChanged || update.selectionSet || hasRefreshEffect) {
           this.decorations = buildDecorations(update.view, plugin);
         }
+      }
+
+      destroy() {
+        activeEditorViews.delete(this.view);
       }
     },
     { decorations: v => v.decorations }

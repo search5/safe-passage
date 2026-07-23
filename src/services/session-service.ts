@@ -12,7 +12,7 @@ const TIMEOUT_VALUES: Record<string, number> = {
 
 export class SessionService {
   private kdbxService: KdbxService;
-  private timers: Map<string, ReturnType<typeof setTimeout>> = new Map();
+  private timers: Map<string, number> = new Map();
   private onLockCallback?: (profileId: string) => void;
 
   constructor(kdbxService: KdbxService) {
@@ -29,7 +29,7 @@ export class SessionService {
     const timeout = TIMEOUT_VALUES[profile.sessionDuration] ?? 0;
     if (timeout === 0 || timeout === Infinity) return;
 
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       this.lockProfile(profile.id);
       new Notice(t('SESSION_EXPIRED', { profileName: profile.name }));
     }, timeout);
@@ -65,7 +65,7 @@ export class SessionService {
   private clearTimer(profileId: string) {
     const timer = this.timers.get(profileId);
     if (timer) {
-      clearTimeout(timer);
+      window.clearTimeout(timer);
       this.timers.delete(profileId);
     }
   }

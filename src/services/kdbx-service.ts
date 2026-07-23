@@ -7,15 +7,16 @@ export function isAbsolutePath(path: string): boolean {
   return path.startsWith('/') || /^[a-zA-Z]:\\/.test(path) || /^[a-zA-Z]:\//.test(path);
 }
 
-function getFs(): any {
-  if (Platform.isDesktop && typeof window !== 'undefined' && (window as any).require) {
-    try {
-      return (window as any).require('fs');
-    } catch (e) {
-      console.error("[SafePassage] fs 모듈 동적 로드 실패:", e);
-    }
+function getFs(): typeof import('fs') | null {
+  // esbuild.config.mjs가 Node 내장 모듈을 external로 빼두었기 때문에,
+  // require('fs')는 번들에 포함되지 않고 데스크톱 런타임의 실제 Node 모듈로 해석됨
+  if (!Platform.isDesktop) return null;
+  try {
+    return require('fs');
+  } catch (e) {
+    console.error("[SafePassage] fs 모듈 동적 로드 실패:", e);
+    return null;
   }
-  return null;
 }
 
 // WebAssembly 기반 Argon2 구현체 등록
@@ -45,9 +46,7 @@ export class KdbxService {
   }
 
   isUnlocked(profileId: string): boolean {
-    const result = this.activeDbs.has(profileId);
-    console.log(`[SafePassage] isUnlocked() 호출 - profileId: ${profileId}, 결과: ${result}, 현재 해제된 DB 목록:`, Array.from(this.activeDbs.keys()));
-    return result;
+    return this.activeDbs.has(profileId);
   }
 
   async unlock(profile: ProfileConfig, password: string): Promise<void> {
@@ -79,7 +78,7 @@ export class KdbxService {
         try {
           const buffer = await fsModule.promises.readFile(profile.keyFilePath);
           keyFileData = buffer.buffer as ArrayBuffer;
-        } catch (err) {
+        } catch {
           throw new Error(`외부 키 파일을 읽을 수 없습니다: ${profile.keyFilePath}`);
         }
       } else {
@@ -101,7 +100,6 @@ export class KdbxService {
 
     const db = await kdbxweb.Kdbx.load(dbData, credentials);
     this.activeDbs.set(profile.id, db);
-    console.log(`[SafePassage] unlock() 완료 - profile.id: ${profile.id} 등록 완료. 현재 해제된 DB 목록:`, Array.from(this.activeDbs.keys()));
   }
 
   lock(profileId: string): void {
@@ -187,7 +185,6 @@ export class KdbxService {
       if (!group.entries.includes(entry)) {
         group.entries.push(entry);
       }
-      console.log(`[SafePassage] 신규 엔트리 생성 및 그룹에 주입 완료 - Title: ${title}`);
     }
 
     // 필드 설정 (Password 필드는 ProtectedValue로 보호)
@@ -234,7 +231,6 @@ export class KdbxService {
       try {
         const nodeBuffer = Buffer.from(buffer);
         await fsModule.promises.writeFile(databasePath, nodeBuffer);
-        console.log(`[SafePassage] 외부 데이터베이스 저장 완료: ${databasePath}`);
       } catch (err) {
         throw new Error(`외부 데이터베이스 파일 쓰기 실패: ${databasePath} (${err instanceof Error ? err.message : err})`);
       }
@@ -267,7 +263,7 @@ export class KdbxService {
 
   private findGroup(root: kdbxweb.KdbxGroup, segments: string[]): kdbxweb.KdbxGroup | null {
     if (segments.length === 0) return root;
-    const head = segments[0]!;
+    const head = segments[0];
     const rest = segments.slice(1);
     const child = root.groups.find(g => (g.name ?? '').toLowerCase() === head.toLowerCase());
     if (!child) return null;
@@ -290,7 +286,7 @@ export class KdbxService {
   private toEntryInfo(entry: kdbxweb.KdbxEntry): KeePassEntryInfo {
     const fields: Record<string, string> = {};
     for (const [key, value] of entry.fields) {
-      fields[key] = value instanceof kdbxweb.ProtectedValue ? value.getText() : (value as string);
+      fields[key] = value instanceof kdbxweb.ProtectedValue ? value.getText() : value;
     }
 
     const title = fields.Title ?? '';

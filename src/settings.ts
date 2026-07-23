@@ -73,7 +73,7 @@ export class SafePassageSettingTab extends PluginSettingTab {
   }
 
   private renderProfiles(container: HTMLElement) {
-    const profiles = Object.values(this.plugin.settings.profiles) as ProfileConfig[];
+    const profiles = Object.values(this.plugin.settings.profiles);
 
     if (profiles.length === 0) {
       container.createEl('p', { text: t('NO_PROFILES_MSG'), attr: { style: 'color: var(--text-muted); font-style: italic;' } });
@@ -160,7 +160,7 @@ export class SafePassageSettingTab extends PluginSettingTab {
       new Setting(profileDiv)
         .addButton(btn => btn
           .setButtonText(t('DELETE_PROFILE'))
-          .setWarning()
+          .setDestructive()
           .onClick(async () => {
             delete this.plugin.settings.profiles[profile.id];
             this.plugin.kdbxService.lock(profile.id);

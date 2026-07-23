@@ -1,4 +1,4 @@
-import { setIcon, Notice } from 'obsidian';
+import { setIcon } from 'obsidian';
 import SafePassagePlugin from '../main';
 import { t } from '../i18n/i18n';
 import { getProfileByIdOrName } from './chip-component';
@@ -59,7 +59,6 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
 
     const renderContent = async () => {
       container.empty();
-      console.log("[SafePassage] 테이블 renderContent() 실행");
 
       if (!config.profileId) {
         container.createEl('p', { text: t('MISSING_PROFILE_PROPERTY') });
@@ -73,7 +72,6 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
       }
 
       const isUnlocked = plugin.kdbxService.isUnlocked(profile.id);
-      console.log(`[SafePassage] 테이블 렌더링 시 잠금 상태 - profile: ${profile.name}, unlocked: ${isUnlocked}`);
 
       // 테이블 타이틀 헤더 렌더링
       const titleText = config.title || `${profile.name} - KeePass 자격 증명`;
@@ -85,11 +83,13 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
         lockDiv.createEl('span', { text: t('PROFILE_IS_LOCKED_MSG', { profileName: profile.name }) });
         
         const unlockBtn = lockDiv.createEl('button', { text: t('UNLOCK') });
-        unlockBtn.addEventListener('click', async () => {
-          const success = await plugin.unlockProfile(profile);
-          if (success) {
-            plugin.refreshViews();
-          }
+        unlockBtn.addEventListener('click', () => {
+          void (async () => {
+            const success = await plugin.unlockProfile(profile);
+            if (success) {
+              plugin.refreshViews();
+            }
+          })();
         });
         return;
       }
@@ -136,24 +136,26 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
           }
 
           // 마스킹 처리된 값 표시
-          const maskSpan = td.createSpan({ text: '••••••••', cls: 'sp-table-mask' });
+          td.createSpan({ text: '••••••••', cls: 'sp-table-mask' });
 
           // 복사 버튼 추가
           const copyBtn = td.createEl('button', { cls: 'sp-copy-btn' });
           setIcon(copyBtn, 'copy');
           copyBtn.title = `${field} ${t('COPY')}`;
 
-          copyBtn.addEventListener('click', async (e) => {
+          copyBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
 
-            let valToCopy = value;
-            if (field.toLowerCase() === 'password') {
-              valToCopy = entry.getPassword();
-            }
+            void (async () => {
+              let valToCopy = value;
+              if (field.toLowerCase() === 'password') {
+                valToCopy = entry.getPassword();
+              }
 
-            await plugin.clipboardService.copyText(valToCopy, plugin.settings.clipboardClearSeconds);
-            plugin.sessionService.consumeSingleLookup(profile);
+              await plugin.clipboardService.copyText(valToCopy, plugin.settings.clipboardClearSeconds);
+              plugin.sessionService.consumeSingleLookup(profile);
+            })();
           });
         }
       }
@@ -163,8 +165,8 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
     await renderContent();
 
     // refreshViews 발생 시 호출될 강제 새로고침 리스너 바인딩
-    container.addEventListener('sp-refresh', async () => {
-      await renderContent();
+    container.addEventListener('sp-refresh', () => {
+      void renderContent();
     });
   });
 }

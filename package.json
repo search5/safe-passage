@@ -19,6 +19,8 @@
   "author": "Ji-ho Lee <search5@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@codemirror/state": "6.5.0",
+    "@codemirror/view": "6.38.6",
     "@types/node": "^16.11.6",
     "esbuild": "0.25.5",
     "obsidian": "latest",

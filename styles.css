@@ -149,12 +149,12 @@
 }
 
 /* 4. 코드 요소 스타일 중화 (inline-processor.ts) */
-code.sp-code-override {
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  box-shadow: none !important;
+code.sp-code-override.sp-code-override.sp-code-override {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
 }
 
 /* 5. 커스텀 필드 리스트 및 요소 (edit-secret-modal.ts) */

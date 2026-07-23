@@ -17,9 +17,9 @@ export function parseToken(raw: string): TokenParseResult | null {
 
   return {
     raw,
-    profileId: match[1]!,
-    entryPath: match[2]!,
-    fieldName: match[3]!
+    profileId: match[1],
+    entryPath: match[2],
+    fieldName: match[3]
   };
 }
 
@@ -31,11 +31,11 @@ export function getProfileByIdOrName(
   
   // 1. ID 직접 확인
   if (plugin.settings.profiles[lowerId]) {
-    return plugin.settings.profiles[lowerId] as ProfileConfig;
+    return plugin.settings.profiles[lowerId];
   }
-  
+
   // 2. 이름 매칭 확인
-  const profiles = Object.values(plugin.settings.profiles) as ProfileConfig[];
+  const profiles = Object.values(plugin.settings.profiles);
   const found = profiles.find(p => p.name.toLowerCase() === lowerId);
   return found ?? null;
 }
@@ -44,15 +44,13 @@ export function buildChipElement(
   token: TokenParseResult,
   plugin: SafePassagePlugin
 ): HTMLElement {
-  const chip = document.createElement('span');
-  chip.classList.add('sp-chip');
-  
+  const chip = createSpan({ cls: 'sp-chip' });
+
   const iconSpan = chip.createSpan({ cls: 'sp-chip-icon' });
   setIcon(iconSpan, 'key');
 
   const profile = getProfileByIdOrName(plugin, token.profileId);
-  console.log(`[SafePassage] buildChipElement() - 토큰 프로필ID: ${token.profileId}, 찾은 프로필 객체:`, profile);
-  
+
   if (!profile) {
     // 프로필 정보가 없는 에러 상태
     chip.classList.add('warning');
@@ -71,14 +69,16 @@ export function buildChipElement(
     chip.createSpan({ text: displayText });
     chip.title = t('PROFILE_LOCKED_DESC');
 
-    chip.addEventListener('click', async (e) => {
+    chip.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const success = await plugin.unlockProfile(profile);
-      if (success) {
-        // 성공 시 칩 상태 리프레시 (노트 강제 업데이트 유도)
-        plugin.refreshViews();
-      }
+      void (async () => {
+        const success = await plugin.unlockProfile(profile);
+        if (success) {
+          // 성공 시 칩 상태 리프레시 (노트 강제 업데이트 유도)
+          plugin.refreshViews();
+        }
+      })();
     });
     return chip;
   }
@@ -115,18 +115,20 @@ export function buildChipElement(
   chip.createSpan({ text: `${entry.title} (${token.fieldName})` });
   chip.title = t('CLICK_TO_COPY');
 
-  chip.addEventListener('click', async (e) => {
+  chip.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // 복사할 값 가져오기
-    let valToCopy = value;
-    if (token.fieldName.toLowerCase() === 'password') {
-      valToCopy = entry.getPassword();
-    }
+    void (async () => {
+      // 복사할 값 가져오기
+      let valToCopy = value;
+      if (token.fieldName.toLowerCase() === 'password') {
+        valToCopy = entry.getPassword();
+      }
 
-    await plugin.clipboardService.copyText(valToCopy, plugin.settings.clipboardClearSeconds);
-    plugin.sessionService.consumeSingleLookup(profile);
+      await plugin.clipboardService.copyText(valToCopy, plugin.settings.clipboardClearSeconds);
+      plugin.sessionService.consumeSingleLookup(profile);
+    })();
   });
 
   return chip;

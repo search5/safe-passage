@@ -7,7 +7,7 @@ import { ClipboardService } from './services/clipboard-service';
 import { KeyringService } from './services/keyring-service';
 import { registerBlockProcessor } from './ui/block-processor';
 import { registerInlineProcessor } from './ui/inline-processor';
-import { buildEditorExtension, refreshChipsEffect } from './ui/inline-decorator';
+import { buildEditorExtension, refreshChipsEffect, getActiveEditorViews } from './ui/inline-decorator';
 import { promptMasterPassword } from './ui/auth-modal';
 import { EditSecretModal } from './ui/edit-secret-modal';
 import { getProfileByIdOrName } from './ui/chip-component';
@@ -70,7 +70,7 @@ export default class SafePassagePlugin extends Plugin {
         }
         
         // 순서대로 첫 번째 항목 잠금 해제 시도
-        this.unlockProfile(locked[0]!);
+        void this.unlockProfile(locked[0]);
       }
     });
 
@@ -94,7 +94,7 @@ export default class SafePassagePlugin extends Plugin {
           const lockedProfileIds = new Set<string>();
 
           while ((match = regex.exec(content)) !== null) {
-            const profileId = match[1]!;
+            const profileId = match[1];
             const profile = getProfileByIdOrName(this, profileId);
             if (profile && !this.kdbxService.isUnlocked(profile.id)) {
               lockedProfileIds.add(profile.id);
@@ -111,7 +111,7 @@ export default class SafePassagePlugin extends Plugin {
                   await this.kdbxService.unlock(profile, savedPass);
                   this.sessionService.startSession(profile);
                   new Notice(t('KEYRING_AUTO_UNLOCKED', { profileName: profile.name }));
-                } catch (err) {
+                } catch {
                   this.keyringService.deletePassword(profile.id);
                 }
               }
@@ -158,7 +158,7 @@ export default class SafePassagePlugin extends Plugin {
           this.sessionService.startSession(profile);
           new Notice(t('KEYRING_AUTO_UNLOCKED', { profileName: profile.name }));
           return true;
-        } catch (err) {
+        } catch {
           // 키링 해제 실패 시 캐시 삭제 후 수동 입력 유도
           this.keyringService.deletePassword(profile.id);
         }
@@ -189,51 +189,31 @@ export default class SafePassagePlugin extends Plugin {
   }
 
   refreshViews() {
-    console.log("[SafePassage] refreshViews() 시작");
-    // 1. CodeMirror 에디터 갱신 효과 디스패치 및 강제 리빌드
+    // 1. 등록된 CM6 에디터들에 갱신 효과 디스패치 — EditorView.dispatch()는 공식 CM6 API
+    for (const cm of getActiveEditorViews()) {
+      try {
+        cm.dispatch({
+          effects: refreshChipsEffect.of()
+        });
+      } catch (e) {
+        console.error("[SafePassage] 에디터 디스패치 중 에러:", e);
+      }
+    }
+
+    // 2. 읽기 모드(프리뷰) 강제 리렌더링 — 공식 public API
     this.app.workspace.iterateAllLeaves(leaf => {
       const view = leaf.view;
-      if (view && typeof view.getViewType === 'function' && view.getViewType() === 'markdown') {
-        // 에디터(편집 모드) 강제 재구축
-        const editMode = (view as any).editMode;
-        if (editMode && typeof editMode.rebuild === 'function') {
-          console.log("[SafePassage] editMode.rebuild() 실행");
-          try {
-            editMode.rebuild();
-          } catch (e) {
-            console.error("[SafePassage] editMode.rebuild() 실패:", e);
-          }
-        }
-
-        // CM6 에디터 직접 디스패치 보강
-        const editor = (view as any).editor;
-        if (editor && editor.cm) {
-          try {
-            console.log("[SafePassage] CM6 에디터 dispatch 실행");
-            editor.cm.dispatch({
-              effects: refreshChipsEffect.of()
-            });
-          } catch (e) {
-            console.error("[SafePassage] 에디터 디스패치 중 에러:", e);
-          }
-        }
-        
-        // 읽기 모드(프리뷰) 강제 리렌더링
-        const previewMode = (view as any).previewMode;
-        if (previewMode && typeof previewMode.rerender === 'function') {
-          console.log("[SafePassage] previewMode.rerender() 실행");
-          try {
-            previewMode.rerender(true);
-          } catch (e) {
-            console.error("[SafePassage] previewMode.rerender() 실패:", e);
-          }
+      if (view instanceof MarkdownView) {
+        try {
+          view.previewMode.rerender(true);
+        } catch (e) {
+          console.error("[SafePassage] previewMode.rerender() 실패:", e);
         }
       }
     });
 
     // 3. 에디터 및 읽기 모드 내의 모든 크레덴셜 테이블 강제 리프레시 이벤트 발송
     document.querySelectorAll('.sp-table-container').forEach(el => {
-      console.log("[SafePassage] DOM 테이블에 sp-refresh 발송");
       el.dispatchEvent(new CustomEvent('sp-refresh'));
     });
   }

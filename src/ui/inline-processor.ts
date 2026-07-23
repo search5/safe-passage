@@ -61,8 +61,6 @@ export function registerInlineProcessor(plugin: SafePassagePlugin): void {
     const text = el.textContent ?? '';
     if (!text.includes('{{sp:')) return;
 
-    console.log("[SafePassage] 읽기 모드 포스트 프로세서(inline-processor) 시작");
-
     const regex = /\{\{sp:([^/]+)\/(.+?)#([^}]+)\}\}/g;
     let match;
 
@@ -74,12 +72,10 @@ export function registerInlineProcessor(plugin: SafePassagePlugin): void {
 
     // 각 수집된 토큰을 DOM 상에서 찾아 순차적으로 칩 엘리먼트로 교체
     for (const rawToken of tokens) {
-      console.log(`[SafePassage] 찾은 토큰 치환 시도: ${rawToken}`);
       const parsed = parseToken(rawToken);
       if (parsed) {
         const chip = buildChipElement(parsed, plugin);
-        const success = replaceTextWithWidget(el, rawToken, chip);
-        console.log(`[SafePassage] 토큰 치환 결과: ${success}`);
+        replaceTextWithWidget(el, rawToken, chip);
       }
     }
   }, -10000);

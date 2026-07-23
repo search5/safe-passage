@@ -1,6 +1,5 @@
-import { App, Modal, Setting, Notice, Editor } from 'obsidian';
+import { App, Modal, Setting, Notice, Editor, TextComponent } from 'obsidian';
 import SafePassagePlugin from '../main';
-import { ProfileConfig } from '../types';
 import { t } from '../i18n/i18n';
 
 export class EditSecretModal extends Modal {
@@ -14,6 +13,9 @@ export class EditSecretModal extends Modal {
   private url = '';
   private notes = '';
   private customFields: { name: string; value: string }[] = [];
+  private passwordInput?: TextComponent;
+  private warningDiv?: HTMLDivElement;
+  private formDiv?: HTMLDivElement;
 
   constructor(app: App, plugin: SafePassagePlugin, editor?: Editor) {
     super(app);
@@ -27,7 +29,7 @@ export class EditSecretModal extends Modal {
     contentEl.createEl('h2', { text: t('INSERT_SECRET') });
 
     // 1. 프로필 선택 (읽기 전용 제외)
-    const writeableProfiles = Object.values(this.plugin.settings.profiles) as ProfileConfig[];
+    const writeableProfiles = Object.values(this.plugin.settings.profiles);
     const activeProfiles = writeableProfiles.filter(p => !p.isReadOnly);
 
     if (activeProfiles.length === 0) {
@@ -38,7 +40,7 @@ export class EditSecretModal extends Modal {
       return;
     }
 
-    this.selectedProfileId = activeProfiles[0]!.id;
+    this.selectedProfileId = activeProfiles[0].id;
 
     new Setting(contentEl)
       .setName(t('SELECT_PROFILE'))
@@ -55,9 +57,11 @@ export class EditSecretModal extends Modal {
 
     // 잠금 상태 경고 영역
     const warningDiv = contentEl.createDiv({ cls: 'sp-warning-container hidden' });
+    this.warningDiv = warningDiv;
 
     // 2. 기본 정보 필드 입력 폼
     const formDiv = contentEl.createDiv();
+    this.formDiv = formDiv;
 
     new Setting(formDiv)
       .setName(t('ENTRY_PATH'))
@@ -81,7 +85,7 @@ export class EditSecretModal extends Modal {
       text.onChange(val => { this.password = val; });
 
       // 외부에서 주입할 수 있게 참조
-      (this as any).passwordInput = text;
+      this.passwordInput = text;
     });
 
     passwordSetting.addButton(btn => btn
@@ -89,10 +93,9 @@ export class EditSecretModal extends Modal {
       .onClick(() => {
         const generated = this.generateRandomPassword(16);
         this.password = generated;
-        const textInst = (this as any).passwordInput;
-        if (textInst) {
-          textInst.setValue(generated);
-          textInst.inputEl.type = 'text'; // 생성된 암호 보여주기
+        if (this.passwordInput) {
+          this.passwordInput.setValue(generated);
+          this.passwordInput.inputEl.type = 'text'; // 생성된 암호 보여주기
         }
         new Notice('무작위 패스워드가 생성되었습니다.');
       }));
@@ -113,7 +116,7 @@ export class EditSecretModal extends Modal {
     contentEl.createEl('h3', { text: t('CUSTOM_FIELDS') });
     const customFieldsDiv = contentEl.createDiv();
 
-    const addFieldSetting = new Setting(contentEl)
+    new Setting(contentEl)
       .addButton(btn => btn
         .setButtonText(t('ADD_FIELD'))
         .onClick(() => {
@@ -136,8 +139,6 @@ export class EditSecretModal extends Modal {
         .onClick(() => this.close()));
 
     // 초기 잠금 상태 확인
-    (this as any).warningDiv = warningDiv;
-    (this as any).formDiv = formDiv;
     this.updateLockWarning();
   }
 
@@ -193,8 +194,8 @@ export class EditSecretModal extends Modal {
   }
 
   private updateLockWarning() {
-    const warningDiv = (this as any).warningDiv as HTMLDivElement;
-    const formDiv = (this as any).formDiv as HTMLDivElement;
+    const warningDiv = this.warningDiv;
+    const formDiv = this.formDiv;
     if (!warningDiv || !formDiv) return;
 
     const profile = this.plugin.settings.profiles[this.selectedProfileId];
@@ -208,11 +209,13 @@ export class EditSecretModal extends Modal {
       warningDiv.createSpan({ text: t('DATABASE_LOCKED_WARNING') + ' ' });
       
       const unlockBtn = warningDiv.createEl('button', { text: t('UNLOCK') });
-      unlockBtn.addEventListener('click', async () => {
-        const success = await this.plugin.unlockProfile(profile);
-        if (success) {
-          this.updateLockWarning();
-        }
+      unlockBtn.addEventListener('click', () => {
+        void (async () => {
+          const success = await this.plugin.unlockProfile(profile);
+          if (success) {
+            this.updateLockWarning();
+          }
+        })();
       });
 
       formDiv.addClass('sp-form-disabled');
