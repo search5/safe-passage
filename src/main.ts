@@ -56,7 +56,7 @@ export default class SafePassagePlugin extends Plugin {
       id: 'unlock-profile-manually',
       name: t('COMMAND_UNLOCK_MANUAL'),
       callback: () => {
-        const profiles = Object.values(this.settings.profiles) as ProfileConfig[];
+        const profiles = Object.values(this.settings.profiles);
         if (profiles.length === 0) {
           new Notice(t('NO_PROFILES_CONFIGURED'));
           return;
