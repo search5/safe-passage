@@ -1,5 +1,9 @@
 # SafePassage
 
+[English](README.md) | [한국어](README.ko.md)
+
+📖 전체 문서: [https://search5.github.io/safe-passage/](https://search5.github.io/safe-passage/)
+
 SafePassage는 Obsidian을 위한 안전하고 가벼우며 고성능인 KeePass 연동 플러그인입니다. 로컬 KeePass 데이터베이스(`.kdbx`)를 연결하여 마스킹된 자격 증명 칩과 구조화된 표를 노트 안에 직접 렌더링하면서도 마스터 비밀번호는 안전하게 보호합니다.
 
 ---
