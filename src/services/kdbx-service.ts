@@ -58,7 +58,7 @@ export class KdbxService {
         const buffer = await fsModule.promises.readFile(profile.databasePath);
         dbData = buffer.buffer as ArrayBuffer;
       } catch (err) {
-        throw new Error(`외부 데이터베이스 파일을 읽을 수 없습니다: ${profile.databasePath} (${err instanceof Error ? err.message : err})`);
+        throw new Error(`외부 데이터베이스 파일을 읽을 수 없습니다: ${profile.databasePath} (${err instanceof Error ? err.message : String(err)})`);
       }
     } else {
       // 절대 경로인데 fsModule이 없다면 (즉 모바일) 에러 처리
@@ -232,7 +232,7 @@ export class KdbxService {
         const nodeBuffer = Buffer.from(buffer);
         await fsModule.promises.writeFile(databasePath, nodeBuffer);
       } catch (err) {
-        throw new Error(`외부 데이터베이스 파일 쓰기 실패: ${databasePath} (${err instanceof Error ? err.message : err})`);
+        throw new Error(`외부 데이터베이스 파일 쓰기 실패: ${databasePath} (${err instanceof Error ? err.message : String(err)})`);
       }
     } else {
       if (isAbsolutePath(databasePath)) {

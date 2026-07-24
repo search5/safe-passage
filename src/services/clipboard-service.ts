@@ -17,18 +17,20 @@ export class ClipboardService {
 
       if (clearSeconds > 0) {
         new Notice(t('COPIED_TIMEOUT', { seconds: clearSeconds }), 3000);
-        this.clearTimer = window.setTimeout(async () => {
-          try {
-            // 현재 클립보드에 있는 값이 우리가 복사한 값과 동일할 때만 지움
-            const currentText = await navigator.clipboard.readText();
-            if (currentText === this.lastCopiedValue) {
+        this.clearTimer = window.setTimeout(() => {
+          void (async () => {
+            try {
+              // 현재 클립보드에 있는 값이 우리가 복사한 값과 동일할 때만 지움
+              const currentText = await navigator.clipboard.readText();
+              if (currentText === this.lastCopiedValue) {
+                await navigator.clipboard.writeText('');
+                new Notice(t('CLIPBOARD_CLEARED'), 3000);
+              }
+            } catch {
+              // readText()가 차단되거나 모바일 환경에 의해 오류 발생 시 무조건 공백 쓰기 시도
               await navigator.clipboard.writeText('');
-              new Notice(t('CLIPBOARD_CLEARED'), 3000);
             }
-          } catch {
-            // readText()가 차단되거나 모바일 환경에 의해 오류 발생 시 무조건 공백 쓰기 시도
-            await navigator.clipboard.writeText('');
-          }
+          })();
         }, clearSeconds * 1000);
       } else {
         new Notice(t('COPIED'), 3000);

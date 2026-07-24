@@ -273,7 +273,7 @@ export class EditSecretModal extends Modal {
       this.plugin.refreshViews();
       this.close();
     } catch (err) {
-      new Notice(`저장 실패: ${err instanceof Error ? err.message : err}`);
+      new Notice(`저장 실패: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 

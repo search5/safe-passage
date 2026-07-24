@@ -76,11 +76,11 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
       // 테이블 타이틀 헤더 렌더링
       const titleText = config.title || `${profile.name} - KeePass 자격 증명`;
       const titleHeader = container.createDiv({ cls: 'sp-table-title' });
-      titleHeader.createEl('span', { text: `📋 ${titleText}`, cls: 'sp-table-title-text' });
+      titleHeader.createSpan({ text: `📋 ${titleText}`, cls: 'sp-table-title-text' });
 
       if (!isUnlocked) {
         const lockDiv = container.createDiv({ cls: 'sp-table-locked' });
-        lockDiv.createEl('span', { text: t('PROFILE_IS_LOCKED_MSG', { profileName: profile.name }) });
+        lockDiv.createSpan({ text: t('PROFILE_IS_LOCKED_MSG', { profileName: profile.name }) });
         
         const unlockBtn = lockDiv.createEl('button', { text: t('UNLOCK') });
         unlockBtn.addEventListener('click', () => {
