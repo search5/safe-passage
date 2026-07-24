@@ -1,4 +1,4 @@
-import { moment } from 'obsidian';
+import { getLanguage } from 'obsidian';
 import en from './locales/en';
 import ko from './locales/ko';
 
@@ -8,8 +8,8 @@ const localeMap: Record<string, typeof en> = {
   'ko-kr': ko,
 };
 
-// 현재 사용자의 로케일 감지
-const currentLocale = (moment.locale() || 'en').toLowerCase();
+// Obsidian 설정(Settings > General > Language)에 지정된 언어 코드 사용
+const currentLocale = (getLanguage() || 'en').toLowerCase();
 const translations = localeMap[currentLocale] ?? en;
 
 export type TranslationKeys = keyof typeof en;
