@@ -1,6 +1,6 @@
 {
   "name": "safe-passage",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A secure, lightweight, and high-performance KeePass integration plugin, featuring WebAssembly Argon2 decryption, masked inline chips, and interactive credential tables.",
   "main": "main.js",
   "type": "module",
