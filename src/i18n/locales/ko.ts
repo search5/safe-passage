@@ -46,7 +46,10 @@ const ko: typeof en = {
   SUCCESS_SAVE: '비밀 정보가 성공적으로 저장되었습니다.',
   SUCCESS_SAVE_TOKEN: '비밀 정보가 저장되었고 토큰이 삽입되었습니다.',
   FIELD_REQUIRED: '항목 경로, 사용자 이름, 비밀번호는 필수 입력 항목입니다.',
-  
+  SAVE_FAILED: '저장 실패: {message}',
+  NO_WRITABLE_PROFILES: '⚠ 쓰기 가능한 프로필이 존재하지 않습니다. 설정을 확인해 주십시오.',
+  PASSWORD_GENERATED: '무작위 패스워드가 생성되었습니다.',
+
   // Clipboard
   COPIED_TIMEOUT: '클립보드에 복사되었습니다. (보안을 위해 {seconds}초 후 소거됩니다.)',
   COPIED: '클립보드에 복사되었습니다.',
@@ -73,6 +76,7 @@ const ko: typeof en = {
   MISSING_PROFILE_PROPERTY: '⚠ 오류: profile 속성이 지정되지 않았습니다.',
   EMPTY_FIELD_TEXT: '-',
   EMPTY_FIELD_DESC: '"{fieldName}" 필드가 데이터에 존재하지 않습니다.',
+  DEFAULT_TABLE_TITLE: '{profileName} - KeePass 자격 증명',
 
   // Settings
   SETTINGS_TITLE: 'SafePassage 설정',
@@ -96,12 +100,28 @@ const ko: typeof en = {
   SESSION_LIFETIME: '세션 만료 수명',
   SESSION_LIFETIME_DESC: '잠금 해제 후 데이터베이스 세션이 만료될 시간입니다.',
   DELETE_PROFILE: '프로필 삭제',
-  
+  DEFAULT_PROFILE_NAME: '새 프로필',
+  UNNAMED_PROFILE: '이름 없음',
+
   // Session Lifetime Options
   SESSION_SINGLE: '1회 조회 후 즉시 잠금',
   SESSION_5MIN: '5분',
   SESSION_15MIN: '15분',
   SESSION_FOREVER: 'Obsidian 종료 시까지',
+
+  // KdbxService errors
+  ERR_EXTERNAL_DB_READ_FAILED: '외부 데이터베이스 파일을 읽을 수 없습니다: {path} ({detail})',
+  ERR_MOBILE_DB_ABSOLUTE_UNSUPPORTED: '모바일 환경에서는 절대 경로의 외부 데이터베이스 파일을 사용할 수 없습니다. Vault 내부 경로로 변경해 주십시오.',
+  ERR_DB_NOT_FOUND: '데이터베이스 파일을 찾을 수 없습니다: {path}',
+  ERR_EXTERNAL_KEYFILE_READ_FAILED: '외부 키 파일을 읽을 수 없습니다: {path}',
+  ERR_MOBILE_KEYFILE_ABSOLUTE_UNSUPPORTED: '모바일 환경에서는 절대 경로의 외부 키 파일을 사용할 수 없습니다.',
+  ERR_KEYFILE_NOT_FOUND: '키 파일을 찾을 수 없습니다: {path}',
+  ERR_READONLY_WRITE: '읽기 전용 프로필에서는 데이터를 추가/수정할 수 없습니다.',
+  ERR_DB_LOCKED: '데이터베이스가 잠겨 있습니다.',
+  ERR_READONLY_DELETE: '읽기 전용 프로필에서는 데이터를 삭제할 수 없습니다.',
+  ERR_DB_INSTANCE_MISSING: '저장할 데이터베이스 인스턴스가 존재하지 않습니다.',
+  ERR_EXTERNAL_DB_WRITE_FAILED: '외부 데이터베이스 파일 쓰기 실패: {path} ({detail})',
+  ERR_MOBILE_DB_SAVE_ABSOLUTE_UNSUPPORTED: '모바일 환경에서는 절대 경로의 외부 데이터베이스 파일을 저장할 수 없습니다.',
 };
 
 export default ko;

@@ -60,7 +60,7 @@ export class SafePassageSettingTab extends PluginSettingTab {
           const newId = `profile-${Date.now()}`;
           const newProfile: ProfileConfig = {
             id: newId,
-            name: '새 프로필',
+            name: t('DEFAULT_PROFILE_NAME'),
             databasePath: '',
             isReadOnly: true,
             managedByKeyring: false,
@@ -93,7 +93,7 @@ export class SafePassageSettingTab extends PluginSettingTab {
         .addText(text => text
           .setValue(profile.name)
           .onChange(async (val) => {
-            profile.name = val.trim() || '이름 없음';
+            profile.name = val.trim() || t('UNNAMED_PROFILE');
             await this.plugin.saveSettings();
           }));
 

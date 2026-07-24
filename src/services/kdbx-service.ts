@@ -2,6 +2,7 @@ import { App, normalizePath, Platform } from 'obsidian';
 import * as kdbxweb from 'kdbxweb';
 import { argon2id, argon2d, argon2i } from 'hash-wasm';
 import { ProfileConfig, KeePassEntryInfo } from '../types';
+import { t } from '../i18n/i18n';
 
 export function isAbsolutePath(path: string): boolean {
   return path.startsWith('/') || /^[a-zA-Z]:\\/.test(path) || /^[a-zA-Z]:\//.test(path);
@@ -22,8 +23,8 @@ async function getFs(): Promise<typeof import('fs') | null> {
 // WebAssembly 기반 Argon2 구현체 등록
 kdbxweb.CryptoEngine.setArgon2Impl(
   async (password, salt, memory, iterations, length, parallelism, type, version) => {
-    const t = type as number;
-    const hashFn = t === 2 ? argon2id : t === 1 ? argon2i : argon2d;
+    const argonType = type as number;
+    const hashFn = argonType === 2 ? argon2id : argonType === 1 ? argon2i : argon2d;
     const hash = await hashFn({
       password: new Uint8Array(password),
       salt: new Uint8Array(salt),
@@ -58,16 +59,19 @@ export class KdbxService {
         const buffer = await fsModule.promises.readFile(profile.databasePath);
         dbData = buffer.buffer as ArrayBuffer;
       } catch (err) {
-        throw new Error(`외부 데이터베이스 파일을 읽을 수 없습니다: ${profile.databasePath} (${err instanceof Error ? err.message : String(err)})`);
+        throw new Error(t('ERR_EXTERNAL_DB_READ_FAILED', {
+          path: profile.databasePath,
+          detail: err instanceof Error ? err.message : String(err)
+        }));
       }
     } else {
       // 절대 경로인데 fsModule이 없다면 (즉 모바일) 에러 처리
       if (isAbsolutePath(profile.databasePath)) {
-        throw new Error("모바일 환경에서는 절대 경로의 외부 데이터베이스 파일을 사용할 수 없습니다. Vault 내부 경로로 변경해 주십시오.");
+        throw new Error(t('ERR_MOBILE_DB_ABSOLUTE_UNSUPPORTED'));
       }
       const dbFile = this.app.vault.getFileByPath(normalizePath(profile.databasePath));
       if (!dbFile) {
-        throw new Error(`데이터베이스 파일을 찾을 수 없습니다: ${profile.databasePath}`);
+        throw new Error(t('ERR_DB_NOT_FOUND', { path: profile.databasePath }));
       }
       dbData = await this.app.vault.readBinary(dbFile);
     }
@@ -79,15 +83,15 @@ export class KdbxService {
           const buffer = await fsModule.promises.readFile(profile.keyFilePath);
           keyFileData = buffer.buffer as ArrayBuffer;
         } catch {
-          throw new Error(`외부 키 파일을 읽을 수 없습니다: ${profile.keyFilePath}`);
+          throw new Error(t('ERR_EXTERNAL_KEYFILE_READ_FAILED', { path: profile.keyFilePath }));
         }
       } else {
         if (isAbsolutePath(profile.keyFilePath)) {
-          throw new Error("모바일 환경에서는 절대 경로의 외부 키 파일을 사용할 수 없습니다.");
+          throw new Error(t('ERR_MOBILE_KEYFILE_ABSOLUTE_UNSUPPORTED'));
         }
         const keyFile = this.app.vault.getFileByPath(normalizePath(profile.keyFilePath));
         if (!keyFile) {
-          throw new Error(`키 파일을 찾을 수 없습니다: ${profile.keyFilePath}`);
+          throw new Error(t('ERR_KEYFILE_NOT_FOUND', { path: profile.keyFilePath }));
         }
         keyFileData = await this.app.vault.readBinary(keyFile);
       }
@@ -163,12 +167,12 @@ export class KdbxService {
 
   async setEntry(profile: ProfileConfig, entryPath: string, fields: Record<string, string>): Promise<void> {
     if (profile.isReadOnly) {
-      throw new Error("읽기 전용 프로필에서는 데이터를 추가/수정할 수 없습니다.");
+      throw new Error(t('ERR_READONLY_WRITE'));
     }
 
     const db = this.activeDbs.get(profile.id);
     if (!db) {
-      throw new Error("데이터베이스가 잠겨 있습니다.");
+      throw new Error(t('ERR_DB_LOCKED'));
     }
 
     const segments = entryPath.split('/');
@@ -206,7 +210,7 @@ export class KdbxService {
 
   async deleteEntry(profile: ProfileConfig, entryPath: string): Promise<boolean> {
     if (profile.isReadOnly) {
-      throw new Error("읽기 전용 프로필에서는 데이터를 삭제할 수 없습니다.");
+      throw new Error(t('ERR_READONLY_DELETE'));
     }
 
     const db = this.activeDbs.get(profile.id);
@@ -222,7 +226,7 @@ export class KdbxService {
 
   private async saveDatabase(profileId: string, databasePath: string): Promise<void> {
     const db = this.activeDbs.get(profileId);
-    if (!db) throw new Error("저장할 데이터베이스 인스턴스가 존재하지 않습니다.");
+    if (!db) throw new Error(t('ERR_DB_INSTANCE_MISSING'));
 
     const buffer = await db.save();
     const fsModule = await getFs();
@@ -232,11 +236,14 @@ export class KdbxService {
         const nodeBuffer = Buffer.from(buffer);
         await fsModule.promises.writeFile(databasePath, nodeBuffer);
       } catch (err) {
-        throw new Error(`외부 데이터베이스 파일 쓰기 실패: ${databasePath} (${err instanceof Error ? err.message : String(err)})`);
+        throw new Error(t('ERR_EXTERNAL_DB_WRITE_FAILED', {
+          path: databasePath,
+          detail: err instanceof Error ? err.message : String(err)
+        }));
       }
     } else {
       if (isAbsolutePath(databasePath)) {
-        throw new Error("모바일 환경에서는 절대 경로의 외부 데이터베이스 파일을 저장할 수 없습니다.");
+        throw new Error(t('ERR_MOBILE_DB_SAVE_ABSOLUTE_UNSUPPORTED'));
       }
       const existing = this.app.vault.getFileByPath(normalizePath(databasePath));
       if (existing) {

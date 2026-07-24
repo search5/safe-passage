@@ -34,7 +34,7 @@ export class EditSecretModal extends Modal {
 
     if (activeProfiles.length === 0) {
       contentEl.createEl('p', {
-        text: '⚠ 쓰기 가능한 프로필이 존재하지 않습니다. 설정을 확인해 주십시오.',
+        text: t('NO_WRITABLE_PROFILES'),
         attr: { style: 'color: var(--text-error);' }
       });
       return;
@@ -97,7 +97,7 @@ export class EditSecretModal extends Modal {
           this.passwordInput.setValue(generated);
           this.passwordInput.inputEl.type = 'text'; // 생성된 암호 보여주기
         }
-        new Notice('무작위 패스워드가 생성되었습니다.');
+        new Notice(t('PASSWORD_GENERATED'));
       }));
 
     new Setting(formDiv)
@@ -273,7 +273,7 @@ export class EditSecretModal extends Modal {
       this.plugin.refreshViews();
       this.close();
     } catch (err) {
-      new Notice(`저장 실패: ${err instanceof Error ? err.message : String(err)}`);
+      new Notice(t('SAVE_FAILED', { message: err instanceof Error ? err.message : String(err) }));
     }
   }
 

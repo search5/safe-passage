@@ -44,7 +44,10 @@ export default {
   SUCCESS_SAVE: 'Secret saved successfully.',
   SUCCESS_SAVE_TOKEN: 'Secret saved and token inserted.',
   FIELD_REQUIRED: 'Entry Path, Username, and Password are required.',
-  
+  SAVE_FAILED: 'Save failed: {message}',
+  NO_WRITABLE_PROFILES: '⚠ No writable profile exists. Please check the settings.',
+  PASSWORD_GENERATED: 'A random password has been generated.',
+
   // Clipboard
   COPIED_TIMEOUT: 'Copied to clipboard. (Auto-clears in {seconds}s for security.)',
   COPIED: 'Copied to clipboard.',
@@ -71,6 +74,7 @@ export default {
   MISSING_PROFILE_PROPERTY: '⚠ Error: "profile" property is not specified.',
   EMPTY_FIELD_TEXT: '(empty)',
   EMPTY_FIELD_DESC: 'Field "{fieldName}" does not exist in this data.',
+  DEFAULT_TABLE_TITLE: '{profileName} - KeePass Credentials',
 
   // Settings
   SETTINGS_TITLE: 'SafePassage Settings',
@@ -94,10 +98,26 @@ export default {
   SESSION_LIFETIME: 'Session Expiry Lifetime',
   SESSION_LIFETIME_DESC: 'Time until the database session expires after unlocking.',
   DELETE_PROFILE: 'Delete Profile',
-  
+  DEFAULT_PROFILE_NAME: 'New Profile',
+  UNNAMED_PROFILE: 'Unnamed',
+
   // Session Lifetime Options
   SESSION_SINGLE: 'Lock immediately after 1 lookup',
   SESSION_5MIN: '5 Minutes',
   SESSION_15MIN: '15 Minutes',
   SESSION_FOREVER: 'Until Obsidian closes',
+
+  // KdbxService errors
+  ERR_EXTERNAL_DB_READ_FAILED: 'Unable to read external database file: {path} ({detail})',
+  ERR_MOBILE_DB_ABSOLUTE_UNSUPPORTED: 'Absolute-path external database files are not supported on mobile. Please switch to a vault-relative path.',
+  ERR_DB_NOT_FOUND: 'Database file not found: {path}',
+  ERR_EXTERNAL_KEYFILE_READ_FAILED: 'Unable to read external key file: {path}',
+  ERR_MOBILE_KEYFILE_ABSOLUTE_UNSUPPORTED: 'Absolute-path external key files are not supported on mobile.',
+  ERR_KEYFILE_NOT_FOUND: 'Key file not found: {path}',
+  ERR_READONLY_WRITE: 'Cannot add or modify data on a read-only profile.',
+  ERR_DB_LOCKED: 'The database is locked.',
+  ERR_READONLY_DELETE: 'Cannot delete data on a read-only profile.',
+  ERR_DB_INSTANCE_MISSING: 'No database instance exists to save.',
+  ERR_EXTERNAL_DB_WRITE_FAILED: 'Failed to write external database file: {path} ({detail})',
+  ERR_MOBILE_DB_SAVE_ABSOLUTE_UNSUPPORTED: 'Absolute-path external database files cannot be saved on mobile.',
 };

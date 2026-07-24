@@ -74,7 +74,7 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
       const isUnlocked = plugin.kdbxService.isUnlocked(profile.id);
 
       // 테이블 타이틀 헤더 렌더링
-      const titleText = config.title || `${profile.name} - KeePass 자격 증명`;
+      const titleText = config.title || t('DEFAULT_TABLE_TITLE', { profileName: profile.name });
       const titleHeader = container.createDiv({ cls: 'sp-table-title' });
       titleHeader.createSpan({ text: `📋 ${titleText}`, cls: 'sp-table-title-text' });
 
