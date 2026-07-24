@@ -1,0 +1,20 @@
+{# Custom override of sphinx_book_theme's components/author.html.
+
+   The theme's default template runs the string "By" through Sphinx's
+   built-in message catalog (`translate('By')`), which for the Korean
+   locale produces the mistranslation "으로 <author>" (a literal,
+   out-of-context rendering of "by"). This override renders a clean,
+   locale-appropriate footer credit instead:
+
+     - Korean build:  "작성자: <author>"
+     - Other builds:  "By <author>"
+#}
+{% if author %}
+<p class="component-author">
+{% if language == 'ko' %}
+작성자: {{ author }}
+{% else %}
+By {{ author }}
+{% endif %}
+</p>
+{% endif %}

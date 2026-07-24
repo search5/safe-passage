@@ -1,0 +1,225 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ji-ho Lee
+# This file is distributed under the same license as the SafePassage
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SafePassage 0.1.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-24 23:49+0900\n"
+"PO-Revision-Date: 2026-07-24 23:55+0900\n"
+"Last-Translator: Ji-ho Lee <search5@gmail.com>\n"
+"Language: ko\n"
+"Language-Team: ko <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../usage.rst:2 b26ab38aa77347d2a96475a53e734d6e
+msgid "Usage"
+msgstr "사용 방법"
+
+#: ../../usage.rst:5 2de8c72b7e694359b13dd53dfc52757d
+msgid "Setting up a database profile"
+msgstr "데이터베이스 프로필 설정하기"
+
+#: ../../usage.rst:7 b2f41f76c2b840c2a3f5449e6b2708ad
+msgid "Open **Settings → SafePassage**."
+msgstr "**설정 → SafePassage** 를 엽니다."
+
+#: ../../usage.rst:8 aa34cb370c734b4eb87e9646e7d9b905
+msgid "Click **Add New Profile** and fill in:"
+msgstr "**새 프로필 추가** 를 클릭하고 다음 항목을 입력합니다:"
+
+#: ../../usage.rst:13 2c9c852918584526a1002e83210d434c
+msgid "Field"
+msgstr "항목"
+
+#: ../../usage.rst:14 4f80208f4ffb46d6b566f84fac934c9f
+msgid "Description"
+msgstr "설명"
+
+#: ../../usage.rst:15 337af4e4d3184f98b8d3a4863f25b584
+msgid "Profile Name"
+msgstr "프로필 이름"
+
+#: ../../usage.rst:16 b1a97cf834144c119a370ea8bd99142b
+msgid "A friendly identifier, e.g. ``work-db``."
+msgstr "예: ``work-db`` 처럼 알아보기 쉬운 식별자."
+
+#: ../../usage.rst:17 f89ec804c8d140f3a9801834e6da0b58
+msgid "Database File Path"
+msgstr "데이터베이스 파일 경로"
+
+#: ../../usage.rst:18 36e73181a3064204a84df6db5105dc5b
+msgid ""
+"Path to your ``.kdbx`` file, relative to this vault, e.g. "
+"``Secrets/vault.kdbx``."
+msgstr ""
+"이 볼트를 기준으로 한 ``.kdbx`` 파일의 상대 경로. 예: "
+"``Secrets/vault.kdbx``."
+
+#: ../../usage.rst:20 1b13adb9362b4c6aa7569e9e911f56f6
+msgid "Key File Path (Optional)"
+msgstr "키 파일 경로 (선택 사항)"
+
+#: ../../usage.rst:21 21afe323cf3b460b9720624e48b9230d
+msgid "Path to your ``.key`` or ``.keyx`` file, relative to this vault."
+msgstr "이 볼트를 기준으로 한 ``.key`` 또는 ``.keyx`` 파일의 상대 경로."
+
+#: ../../usage.rst:22 04dc12281543467ba306747466c7f73e
+msgid "Session Expiry Lifetime"
+msgstr "세션 만료 시간"
+
+#: ../../usage.rst:23 4d2c5a3c89db4287a0c5851ac934634e
+msgid ""
+"How long the unlocked database stays in memory: **Immediate lock** (locks"
+" again right after a single lookup), **5 minutes**, **15 minutes**, or "
+"**Forever** (until Obsidian closes or you lock it manually)."
+msgstr ""
+"잠금 해제된 데이터베이스가 메모리에 유지되는 시간입니다: **즉시 잠금** (한 "
+"번 조회한 직후 다시 잠김), **5분**, **15분**, 또는 **계속 유지** "
+"(Obsidian을 종료하거나 직접 잠글 때까지)."
+
+#: ../../usage.rst:28 ff8d8bd184f04239b4c69fc0397b0edf
+msgid ""
+"You can add multiple profiles to reference more than one KeePass database"
+" from the same vault. Toggling **Read-Only** on a profile blocks all "
+"writes (entry inserts) against it, and **Manage with Master Keyring** "
+"controls whether that profile's password is cached for automatic "
+"unlocking — this only takes effect if the global **Enable Master "
+"Keyring** switch under **Global Security & Clipboard Settings** is also "
+"turned on."
+msgstr ""
+"같은 볼트 안에서 여러 KeePass 데이터베이스를 참조하도록 여러 프로필을 추가"
+"할 수 있습니다. 프로필의 **읽기 전용** 을 켜면 해당 데이터베이스에 대한 모"
+"든 쓰기(항목 추가)가 차단되며, **마스터 키링으로 관리** 는 자동 잠금 해제"
+"를 위해 해당 프로필의 암호를 캐싱할지를 제어합니다 — 이 설정은 **전역 보"
+"안 및 클립보드 설정** 아래의 전역 **마스터 키링 사용** 스위치도 켜져 있어"
+"야 실제로 적용됩니다."
+
+#: ../../usage.rst:36 956ed3494c63456eabfd8e43b3fb607e
+msgid "Masked inline chips"
+msgstr "마스킹된 인라인 칩"
+
+#: ../../usage.rst:38 2565876cfd7e433491c18dab3291e945
+msgid "Insert credential tokens anywhere in your note wrapped in backticks:"
+msgstr "노트 어디에든 백틱으로 감싼 자격 증명 토큰을 삽입할 수 있습니다:"
+
+#: ../../usage.rst:45 c97bdfb686d0404bb24549769badd9b9
+msgid "The token format is ``{{sp:<profile>/<entry-path>#<field>}}``."
+msgstr "토큰 형식은 ``{{sp:<프로필>/<항목 경로>#<필드>}}`` 입니다."
+
+#: ../../usage.rst:47 6ba7cbc40b0a406996a6082a811dfcf6
+msgid ""
+"**Locked state**: renders as ``work-db: Twitter#Password (🔒)``. Click it "
+"to open the unlock modal and enter the database's master password."
+msgstr ""
+"**잠금 상태**: ``work-db: Twitter#Password (🔒)`` 형태로 표시됩니다. 클릭"
+"하면 잠금 해제 모달이 열리며 데이터베이스의 마스터 암호를 입력할 수 있습니"
+"다."
+
+#: ../../usage.rst:49 df36448db5364aafb52639606399a7d8
+msgid ""
+"**Unlocked state**: renders as a masked chip (``••••••••``). Click it to "
+"copy the value to your clipboard."
+msgstr ""
+"**잠금 해제 상태**: 마스킹된 칩(``••••••••``)으로 표시됩니다. 클릭하면 값"
+"이 클립보드로 복사됩니다."
+
+#: ../../usage.rst:53 67990332e72645c18fc718023f3b5348
+msgid "Credential tables"
+msgstr "자격 증명 표"
+
+#: ../../usage.rst:55 4c9917eaf6f74bbf9da5dd0ac3c8d122
+msgid ""
+"Use ``safe-passage`` code blocks to render a structured table of several "
+"entries at once:"
+msgstr ""
+"``safe-passage`` 코드 블록을 사용하면 여러 항목을 한 번에 구조화된 표로 렌"
+"더링할 수 있습니다:"
+
+#: ../../usage.rst:69 8d44243285a941e4bbdc33401fb3c250
+msgid ""
+"This renders a table with one column per field in ``fields`` and a copy "
+"button for every entry."
+msgstr ""
+"``fields`` 에 지정한 필드마다 하나의 열을 갖는 표가 렌더링되며, 각 항목마"
+"다 복사 버튼이 함께 표시됩니다."
+
+#: ../../usage.rst:73 eeae6bad511a43afa660e4de40ea50ea
+msgid "Inserting new credentials"
+msgstr "새 자격 증명 삽입하기"
+
+#: ../../usage.rst:75 4ef6f1a335e046c497f7bf2bef6e62a2
+msgid "You can add a new entry to your KeePass database without leaving Obsidian:"
+msgstr "Obsidian을 벗어나지 않고도 KeePass 데이터베이스에 새 항목을 추가할 수 있습니다:"
+
+#: ../../usage.rst:77 aef68d94b4d54af58fd9ae60c53a1472
+msgid "Open the Command Palette (``Cmd/Ctrl + P``)."
+msgstr "명령 팔레트(``Cmd/Ctrl + P``)를 엽니다."
+
+#: ../../usage.rst:78 7328f2c724b3408793216e7ddad6f577
+msgid "Run **SafePassage: Insert Secret**."
+msgstr "**SafePassage: 비밀 정보 삽입** 을 실행합니다."
+
+#: ../../usage.rst:79 320421c15da546de980d1e302270c456
+msgid ""
+"Choose a profile, type the entry path (e.g. ``Database/MySQL``), and fill"
+" in the credential fields. Use **[Generate]** to create a strong "
+"16-character password."
+msgstr ""
+"프로필을 선택하고, 항목 경로(예: ``Database/MySQL``)를 입력한 뒤 자격 증"
+"명 필드를 채웁니다. **[생성]** 버튼을 사용하면 16자리의 강력한 암호를 만"
+"들 수 있습니다."
+
+#: ../../usage.rst:82 10faa86597a040dd97ec4c03ffb8db67
+msgid "Click **[Save]**."
+msgstr "**[저장]** 을 클릭합니다."
+
+#: ../../usage.rst:84 7c594fb90c3a414ba0c7eb8ac597f7b1
+msgid ""
+"The credentials are written directly to the ``.kdbx`` file, and the token"
+" `` `{{sp:work-db/Database/MySQL#Password}}` `` is inserted at your "
+"cursor automatically."
+msgstr ""
+"자격 증명은 ``.kdbx`` 파일에 직접 기록되며, `` `{{sp:work-"
+"db/Database/MySQL#Password}}` `` 토큰이 커서 위치에 자동으로 삽입됩니다."
+
+#: ../../usage.rst:89 dbafeb8cf7324259a79815a29ccc51c0
+msgid "Clipboard behavior"
+msgstr "클립보드 동작"
+
+#: ../../usage.rst:91 8b46c5efeaba4b88ac8b52a891ee2588
+msgid ""
+"When you copy a value from a chip or a table, SafePassage can "
+"automatically clear it from your system clipboard after **Clipboard Clear"
+" Timeout (seconds)**, a global setting under **Global Security & "
+"Clipboard Settings** (set it to ``0`` to disable auto-clear). The clear "
+"only happens if the clipboard still contains the exact value SafePassage "
+"copied — so it never wipes out something else you copied in the meantime."
+msgstr ""
+"칩이나 표에서 값을 복사하면, SafePassage는 **전역 보안 및 클립보드 설정** "
+"아래의 전역 설정인 **클립보드 자동 삭제 시간(초)** 이 지난 뒤 시스템 클립"
+"보드에서 자동으로 값을 지울 수 있습니다(``0`` 으로 설정하면 자동 삭제가 비"
+"활성화됩니다). 이 삭제는 클립보드에 SafePassage가 복사한 값이 그대로 남아 "
+"있을 때만 실행되므로, 그 사이에 다른 것을 복사했다면 지워지지 않습니다."
+
+#: ../../usage.rst:99 4f8af81a38f5408b9697a8b96faaf1f0
+msgid "Locking a database"
+msgstr "데이터베이스 잠그기"
+
+#: ../../usage.rst:101 03af96612d0648b586dbe4af74738f52
+msgid ""
+"A profile's database locks automatically once its **Session Expiry "
+"Lifetime** elapses. You can also lock every profile immediately by "
+"running **SafePassage: Lock all SafePassage profiles** from the Command "
+"Palette, which is useful before stepping away from your machine."
+msgstr ""
+"프로필의 데이터베이스는 **세션 만료 시간** 이 지나면 자동으로 잠깁니다. 명"
+"령 팔레트에서 **SafePassage: 모든 SafePassage 프로필 잠금** 을 실행하면 모"
+"든 프로필을 즉시 잠글 수도 있습니다. 자리를 비우기 전에 유용합니다."

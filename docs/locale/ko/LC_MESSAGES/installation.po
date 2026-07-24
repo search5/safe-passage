@@ -1,0 +1,90 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ji-ho Lee
+# This file is distributed under the same license as the SafePassage
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SafePassage 0.1.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-24 23:49+0900\n"
+"PO-Revision-Date: 2026-07-24 23:55+0900\n"
+"Last-Translator: Ji-ho Lee <search5@gmail.com>\n"
+"Language: ko\n"
+"Language-Team: ko <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../installation.rst:2 d6e29ee6cd394cc890397ef95cd345d7
+msgid "Installation"
+msgstr "설치"
+
+#: ../../installation.rst:4 02e24c44f3c9438b8b13d02cd3409b44
+msgid "There are two ways to install **SafePassage**."
+msgstr "**SafePassage** 를 설치하는 방법은 두 가지입니다."
+
+#: ../../installation.rst:7 4031a496418e45609f60f6e0ada921f6
+msgid "Method 1 — Install from Obsidian's Community Plugins browser"
+msgstr "방법 1 — Obsidian 커뮤니티 플러그인 브라우저에서 설치"
+
+#: ../../installation.rst:9 8ba3f5d8593a41db8b779413ae011d1d
+msgid "This is the recommended method for most users."
+msgstr "대부분의 사용자에게 권장하는 방법입니다."
+
+#: ../../installation.rst:11 c94f355038ce48f195d0b7595bb80824
+msgid "Open Obsidian and go to **Settings → Community plugins**."
+msgstr "Obsidian을 열고 **설정 → 커뮤니티 플러그인** 으로 이동합니다."
+
+#: ../../installation.rst:12 aacd255e35d54720ad0355ba7020635f
+msgid "Make sure **Restricted mode** is turned off."
+msgstr "**제한 모드(Restricted mode)** 가 꺼져 있는지 확인합니다."
+
+#: ../../installation.rst:13 0bdb0fbf61cb47b18ad0b21e78711b89
+msgid "Click **Browse** and search for ``SafePassage``."
+msgstr "**찾아보기(Browse)** 를 클릭하고 ``SafePassage`` 를 검색합니다."
+
+#: ../../installation.rst:14 25262ea9bb19431da5d7b0a5c09d1960
+msgid "Click **Install**, then **Enable** the plugin once installation finishes."
+msgstr ""
+"**설치(Install)** 를 클릭한 뒤, 설치가 끝나면 플러그인을 **활성화"
+"(Enable)** 합니다."
+
+#: ../../installation.rst:17 12c7876e3e1f49db8ead0dfec58b81ab
+msgid "Method 2 — Clone the Git repository and build from source"
+msgstr "방법 2 — Git 저장소를 복제하여 소스에서 직접 빌드"
+
+#: ../../installation.rst:19 b72d388d0d3a422baeec9bbadf94a747
+msgid ""
+"Use this method if you want to build the plugin yourself, run a "
+"development build, or contribute changes."
+msgstr ""
+"플러그인을 직접 빌드하거나, 개발 빌드를 실행하거나, 변경 사항을 기여하고 "
+"싶은 경우 이 방법을 사용하세요."
+
+#: ../../installation.rst:22 3954ab3dd1394c22a800173274e90ff6
+msgid "**Requirements:** `Node.js <https://nodejs.org/>`_ 18 or later."
+msgstr "**요구 사항:** `Node.js <https://nodejs.org/>`_ 18 이상."
+
+#: ../../installation.rst:31 abb5afc07b14447289abbd550326965f
+msgid ""
+"Then copy ``main.js``, ``manifest.json``, and ``styles.css`` into your "
+"vault's plugin directory:"
+msgstr ""
+"그런 다음 ``main.js``, ``manifest.json``, ``styles.css`` 를 볼트의 플러그"
+"인 디렉터리로 복사합니다:"
+
+#: ../../installation.rst:38 33535d81a13a47a6a61783ecb1abc97e
+msgid ""
+"Restart Obsidian, then enable **SafePassage** under **Settings → "
+"Community plugins**."
+msgstr ""
+"Obsidian을 재시작한 뒤 **설정 → 커뮤니티 플러그인** 에서 **SafePassage** "
+"를 활성화합니다."
+
+#: ../../installation.rst:41 6c2a889c62794285a5fc4b242aa21289
+msgid "Once installed, continue to :doc:`usage` to configure a database profile."
+msgstr "설치가 끝났다면 :doc:`usage` 로 이동해 데이터베이스 프로필을 설정하세요."

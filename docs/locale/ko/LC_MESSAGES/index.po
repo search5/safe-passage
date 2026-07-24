@@ -1,0 +1,42 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ji-ho Lee
+# This file is distributed under the same license as the SafePassage
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SafePassage 0.1.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-24 23:49+0900\n"
+"PO-Revision-Date: 2026-07-24 23:55+0900\n"
+"Last-Translator: Ji-ho Lee <search5@gmail.com>\n"
+"Language: ko\n"
+"Language-Team: ko <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../index.rst:12
+msgid "Contents:"
+msgstr "목차:"
+
+#: ../../index.rst:4 a409a5269be9497697c456eda9ebdc70
+msgid "SafePassage documentation"
+msgstr "SafePassage 문서"
+
+#: ../../index.rst:6 a5e734e08e4642a0936a2c68952bc16e
+msgid ""
+"`SafePassage <https://github.com/search5/safe-passage>`_ is a secure, "
+"lightweight `Obsidian <https://obsidian.md>`_ plugin that links your "
+"local KeePass databases (``.kdbx``) to your vault, rendering masked "
+"credential chips and structured tables directly inside your notes — "
+"without ever storing your master passwords or secrets in plain text."
+msgstr ""
+"`SafePassage <https://github.com/search5/safe-passage>`_ 는 로컬 KeePass "
+"데이터베이스(``.kdbx``)를 볼트에 연결하여, 마스터 암호나 비밀 정보를 평문으"
+"로 저장하지 않으면서 노트 안에 마스킹된 자격 증명 칩과 구조화된 표를 직접 "
+"렌더링해 주는 안전하고 가벼운 `Obsidian <https://obsidian.md>`_ 플러그인입"
+"니다."

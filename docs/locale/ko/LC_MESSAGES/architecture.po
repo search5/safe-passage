@@ -1,0 +1,196 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Ji-ho Lee
+# This file is distributed under the same license as the SafePassage
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SafePassage 0.1.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-24 23:51+0900\n"
+"PO-Revision-Date: 2026-07-24 23:55+0900\n"
+"Last-Translator: Ji-ho Lee <search5@gmail.com>\n"
+"Language: ko\n"
+"Language-Team: ko <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../architecture.rst:2 cfc7b01675b847749e112fff527569cc
+msgid "Architecture"
+msgstr "아키텍처"
+
+#: ../../architecture.rst:4 c18c826bcb8c4b4fa055a6d6c1f7ac90
+msgid ""
+"This page describes the internal design of **SafePassage** and the "
+"reasoning behind its key implementation choices."
+msgstr ""
+"이 페이지는 **SafePassage** 의 내부 설계와 주요 구현 선택의 이유를 설명합"
+"니다."
+
+#: ../../architecture.rst:8 05a232f0b18e4532b7126e3c4514e962
+msgid "WebAssembly Argon2 engine"
+msgstr "WebAssembly Argon2 엔진"
+
+#: ../../architecture.rst:10 4de61594765144568add48d61daacc08
+msgid ""
+"KeePass KDBX4 databases derive their master key using Argon2, which is "
+"computationally expensive by design. SafePassage registers a `hash-wasm "
+"<https://github.com/Daninet/hash-wasm>`_-backed Argon2 implementation "
+"with ``kdbxweb``'s crypto engine, so the key derivation runs as "
+"WebAssembly instead of pure JavaScript. This keeps large iteration/memory"
+" parameters from freezing Obsidian's UI thread or exhausting memory on "
+"lower-powered devices such as phones and tablets."
+msgstr ""
+"KeePass KDBX4 데이터베이스는 의도적으로 연산 비용이 큰 Argon2를 사용해 마스"
+"터 키를 유도합니다. SafePassage는 ``kdbxweb`` 의 암호화 엔진에 `hash-wasm "
+"<https://github.com/Daninet/hash-wasm>`_ 기반 Argon2 구현을 등록하여, 키 "
+"유도 연산이 순수 JavaScript가 아닌 WebAssembly로 실행되도록 합니다. 덕분"
+"에 반복 횟수나 메모리 파라미터가 크더라도 Obsidian의 UI 스레드가 멈추거나 "
+"휴대폰·태블릿 같은 저사양 기기에서 메모리가 고갈되는 것을 막을 수 있습니"
+"다."
+
+#: ../../architecture.rst:19 6bc326de283644dda2fddc1b67e055ac
+msgid "Vault-relative file access"
+msgstr "볼트 기준 상대 경로 파일 접근"
+
+#: ../../architecture.rst:21 534d699975884bf1b16c3629f8a786a3
+msgid ""
+"Database and key files are read and written exclusively through "
+"Obsidian's ``Vault`` API (``vault.readBinary`` / ``vault.modifyBinary``) "
+"using vault-relative, normalized paths — never Node's ``fs`` module "
+"directly. Because the Vault API abstracts over the underlying storage, "
+"the exact same profile configuration (a path like ``Secrets/vault.kdbx``)"
+" resolves correctly on desktop and on mobile (iOS/Android), where the "
+"plugin has no direct filesystem access."
+msgstr ""
+"데이터베이스와 키 파일은 Node의 ``fs`` 모듈을 직접 사용하지 않고, 오직 "
+"Obsidian의 ``Vault`` API(``vault.readBinary`` / ``vault.modifyBinary``)"
+"를 통해 볼트 기준의 정규화된 상대 경로로만 읽고 씁니다. Vault API가 실제 "
+"저장소를 추상화해 주기 때문에, ``Secrets/vault.kdbx`` 같은 동일한 프로필 "
+"경로 설정이 플러그인이 파일 시스템에 직접 접근할 수 없는 데스크톱과 모바"
+"일(iOS/Android) 양쪽에서 똑같이 올바르게 해석됩니다."
+
+#: ../../architecture.rst:30 d2daf948c90c4cdfb5840a06b0f1b0da
+msgid "In-memory session keyring"
+msgstr "메모리 내 세션 키링"
+
+#: ../../architecture.rst:32 146c2512b92f4e819875c6cdb9262265
+msgid ""
+"Unlocked databases are kept in a ``Map`` inside ``KdbxService``, keyed by"
+" profile ID, entirely in JavaScript heap memory — never written to disk. "
+"Master passwords typed into the unlock modal are cached the same way in "
+"``KeyringService`` so a profile can be silently re-unlocked in the "
+"background (for example when a note with an inline chip is opened again) "
+"without re-prompting the user, for as long as its session is alive."
+msgstr ""
+"잠금 해제된 데이터베이스는 프로필 ID를 키로 하여 ``KdbxService`` 내부의 "
+"``Map`` 에 오직 JavaScript 힙 메모리에만 보관되며 디스크에는 절대 기록되"
+"지 않습니다. 잠금 해제 모달에 입력한 마스터 암호도 같은 방식으로 "
+"``KeyringService`` 에 캐싱되어, 세션이 살아있는 동안에는 인라인 칩이 있는 "
+"노트를 다시 열었을 때처럼 사용자에게 다시 묻지 않고 백그라운드에서 조용히 "
+"프로필을 재해제할 수 있습니다."
+
+#: ../../architecture.rst:40 d4bb79f0a1f84399a6dc2c4e7883f21e
+msgid "Session expiry and locking"
+msgstr "세션 만료와 잠금"
+
+#: ../../architecture.rst:42 d169013aa088461b88f163c36af791cb
+msgid ""
+"``SessionService`` runs a ``setTimeout`` per unlocked profile based on "
+"the profile's **Session Expiry Lifetime** setting: immediate (locks again"
+" after a single lookup), 5 minutes, 15 minutes, or indefinitely until "
+"Obsidian closes or the profile is locked manually. When a timer fires, "
+"the corresponding entry is removed from both the active-database map and "
+"the in-memory keyring, so its secrets stop being reachable from that "
+"point on."
+msgstr ""
+"``SessionService`` 는 프로필의 **세션 만료 시간** 설정에 따라 잠금 해제된 "
+"프로필마다 ``setTimeout`` 을 실행합니다: 즉시(한 번 조회 후 바로 다시 잠"
+"김), 5분, 15분, 또는 Obsidian을 종료하거나 수동으로 잠글 때까지 무기한입니"
+"다. 타이머가 만료되면 해당 항목은 활성 데이터베이스 맵과 메모리 내 키링에"
+"서 모두 제거되어, 그 시점부터는 비밀 정보에 접근할 수 없게 됩니다."
+
+#: ../../architecture.rst:50 da7ae35bfe064b3a90acf7546bbe6926
+msgid "Protected field values"
+msgstr "보호된 필드 값"
+
+#: ../../architecture.rst:52 b714008a6405498db636a636d7efc913
+msgid ""
+"Sensitive KeePass fields (passwords, and any field marked \"protected\" "
+"in the database) are wrapped by ``kdbxweb`` in a ``ProtectedValue`` "
+"container rather than being kept as a plain string. SafePassage calls "
+"``ProtectedValue.getText()`` only at the point a value is actually needed"
+" — to render a masked chip's copy action, to populate a table cell, or to"
+" write a new entry — and does not retain the decoded plain string beyond "
+"that call."
+msgstr ""
+"민감한 KeePass 필드(암호, 그리고 데이터베이스에서 \"보호됨\"으로 표시된 모"
+"든 필드)는 일반 문자열이 아니라 ``kdbxweb`` 의 ``ProtectedValue`` 컨테이"
+"너로 감싸져 보관됩니다. SafePassage는 마스킹된 칩의 복사 동작을 렌더링하"
+"거나, 표 셀을 채우거나, 새 항목을 기록하는 등 값이 실제로 필요한 순간에"
+"만 ``ProtectedValue.getText()`` 를 호출하며, 해당 호출 이후에는 디코딩된 "
+"평문 문자열을 보관하지 않습니다."
+
+#: ../../architecture.rst:61 c49de8af47f546df8e04a490bd28af35
+msgid "Clipboard sanitation"
+msgstr "클립보드 정화"
+
+#: ../../architecture.rst:63 f0e3302fd2634602b804d518cb2c2eb9
+msgid ""
+"When a secret is copied to the clipboard, ``ClipboardService`` starts a "
+"timer (length configurable per profile) and remembers the exact value it "
+"wrote. When the timer fires, it first re-reads the clipboard and only "
+"overwrites it with an empty string if the contents still match what "
+"SafePassage copied — so a value the user has since replaced with "
+"something else is never clobbered."
+msgstr ""
+"비밀 정보가 클립보드에 복사되면 ``ClipboardService`` 는 타이머를 시작하"
+"고 자신이 기록한 값을 정확히 기억해 둡니다. 타이머가 만료되면 먼저 클립보"
+"드를 다시 읽어, 그 내용이 SafePassage가 복사한 값과 여전히 일치할 때만 빈 "
+"문자열로 덮어씁니다 — 그래서 그 사이 사용자가 다른 것을 복사해 두었다면 "
+"그 값을 절대 지우지 않습니다."
+
+#: ../../architecture.rst:71 08821f739df84df284bf239b22f3787b
+msgid "Inline chip and table rendering"
+msgstr "인라인 칩과 표 렌더링"
+
+#: ../../architecture.rst:73 2dc2f353cedd4e829e9935268d2e426f
+msgid ""
+"Notes reference secrets through two mechanisms that both resolve against "
+"the same ``KdbxService``:"
+msgstr ""
+"노트는 다음 두 가지 방식으로 비밀 정보를 참조하며, 둘 다 동일한 "
+"``KdbxService`` 를 통해 해석됩니다:"
+
+#: ../../architecture.rst:76 bde5e27d22884f55b5bbfd2e0b3de196
+msgid ""
+"Inline tokens (``{{sp:<profile>/<entry>#<field>}}``) are matched by a "
+"CodeMirror decoration in Live Preview and by a Markdown post-processor in"
+" Reading view, both rendering the same masked chip component."
+msgstr ""
+"인라인 토큰(``{{sp:<프로필>/<항목>#<필드>}}``)은 라이브 프리뷰에서는 "
+"CodeMirror 데코레이션으로, 읽기 모드에서는 마크다운 후처리기로 각각 매칭되"
+"며, 두 경우 모두 동일한 마스킹 칩 컴포넌트를 렌더링합니다."
+
+#: ../../architecture.rst:79 a3e99d57f4554c38863c19a212ee001b
+msgid ""
+"``safe-passage`` fenced code blocks are handled by a dedicated block "
+"processor that parses the YAML body and renders a full credential table."
+msgstr ""
+"``safe-passage`` 코드 블록은 YAML 본문을 파싱해 전체 자격 증명 표를 렌더링"
+"하는 전용 블록 프로세서가 처리합니다."
+
+#: ../../architecture.rst:82 1be8ac0cb1794bf686db951fbd6f9d1b
+msgid ""
+"Both paths only ever display a masked placeholder in the DOM; the "
+"underlying secret is fetched from ``KdbxService`` on demand — for example"
+" when the user clicks a chip to copy its value — rather than being "
+"embedded in the rendered HTML."
+msgstr ""
+"두 경로 모두 DOM에는 마스킹된 자리표시자만 표시할 뿐, 실제 비밀 값은 렌더"
+"링된 HTML에 포함되지 않고 사용자가 칩을 클릭해 값을 복사하는 시점 등 필요"
+"할 때마다 ``KdbxService`` 에서 가져옵니다."

@@ -9,3 +9,7 @@ main.js
 
 # Obsidian local settings
 .obsidian/
+
+# Sphinx documentation build output
+docs/_build/
+docs/locale/**/*.mo
