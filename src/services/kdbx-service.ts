@@ -7,12 +7,12 @@ export function isAbsolutePath(path: string): boolean {
   return path.startsWith('/') || /^[a-zA-Z]:\\/.test(path) || /^[a-zA-Z]:\//.test(path);
 }
 
-function getFs(): typeof import('fs') | null {
+async function getFs(): Promise<typeof import('fs') | null> {
   // esbuild.config.mjs가 Node 내장 모듈을 external로 빼두었기 때문에,
-  // require('fs')는 번들에 포함되지 않고 데스크톱 런타임의 실제 Node 모듈로 해석됨
+  // 동적 import('fs')는 번들에 포함되지 않고 데스크톱 런타임의 실제 Node 모듈로 해석됨
   if (!Platform.isDesktop) return null;
   try {
-    return require('fs');
+    return await import('fs');
   } catch (e) {
     console.error("[SafePassage] fs 모듈 동적 로드 실패:", e);
     return null;
@@ -51,7 +51,7 @@ export class KdbxService {
 
   async unlock(profile: ProfileConfig, password: string): Promise<void> {
     let dbData: ArrayBuffer;
-    const fsModule = getFs();
+    const fsModule = await getFs();
 
     if (isAbsolutePath(profile.databasePath) && fsModule) {
       try {
@@ -225,7 +225,7 @@ export class KdbxService {
     if (!db) throw new Error("저장할 데이터베이스 인스턴스가 존재하지 않습니다.");
 
     const buffer = await db.save();
-    const fsModule = getFs();
+    const fsModule = await getFs();
 
     if (isAbsolutePath(databasePath) && fsModule) {
       try {

@@ -160,7 +160,7 @@ export class SafePassageSettingTab extends PluginSettingTab {
       new Setting(profileDiv)
         .addButton(btn => btn
           .setButtonText(t('DELETE_PROFILE'))
-          .setDestructive()
+          .setWarning()
           .onClick(async () => {
             delete this.plugin.settings.profiles[profile.id];
             this.plugin.kdbxService.lock(profile.id);
