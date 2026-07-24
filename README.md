@@ -1,5 +1,7 @@
 # SafePassage
 
+[English](README.md) | [한국어](README.ko.md)
+
 SafePassage is a secure, lightweight, and high-performance KeePass integration plugin for Obsidian. It allows you to link your local KeePass databases (`.kdbx`) to render masked credential chips and structured tables directly inside your notes, while keeping your master passwords secure.
 
 ---
