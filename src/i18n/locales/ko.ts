@@ -90,9 +90,9 @@ const ko: typeof en = {
   ADD_NEW_PROFILE: '새 프로필 추가',
   PROFILE_NAME: '프로필 이름',
   DATABASE_PATH: '데이터베이스 파일 경로',
-  DATABASE_PATH_DESC: '로컬 절대 파일 경로 (예: /Users/username/passwords.kdbx)',
+  DATABASE_PATH_DESC: '이 Vault 기준 상대 경로의 .kdbx 파일 (예: Secrets/passwords.kdbx)',
   KEY_PATH: '키 파일 경로 (선택 사항)',
-  KEY_PATH_DESC: '로컬 절대 파일 경로 (선택 사항)',
+  KEY_PATH_DESC: '이 Vault 기준 상대 경로의 키 파일 (선택 사항)',
   READ_ONLY: '읽기 전용 (Read-Only)',
   READ_ONLY_DESC: '활성화 시 데이터베이스에 쓰거나 항목을 수정할 수 없습니다.',
   MANAGE_BY_KEYRING: '마스터 키링으로 관리',
@@ -110,18 +110,12 @@ const ko: typeof en = {
   SESSION_FOREVER: 'Obsidian 종료 시까지',
 
   // KdbxService errors
-  ERR_EXTERNAL_DB_READ_FAILED: '외부 데이터베이스 파일을 읽을 수 없습니다: {path} ({detail})',
-  ERR_MOBILE_DB_ABSOLUTE_UNSUPPORTED: '모바일 환경에서는 절대 경로의 외부 데이터베이스 파일을 사용할 수 없습니다. Vault 내부 경로로 변경해 주십시오.',
-  ERR_DB_NOT_FOUND: '데이터베이스 파일을 찾을 수 없습니다: {path}',
-  ERR_EXTERNAL_KEYFILE_READ_FAILED: '외부 키 파일을 읽을 수 없습니다: {path}',
-  ERR_MOBILE_KEYFILE_ABSOLUTE_UNSUPPORTED: '모바일 환경에서는 절대 경로의 외부 키 파일을 사용할 수 없습니다.',
-  ERR_KEYFILE_NOT_FOUND: '키 파일을 찾을 수 없습니다: {path}',
+  ERR_DB_NOT_FOUND: 'Vault 내에서 데이터베이스 파일을 찾을 수 없습니다: {path}',
+  ERR_KEYFILE_NOT_FOUND: 'Vault 내에서 키 파일을 찾을 수 없습니다: {path}',
   ERR_READONLY_WRITE: '읽기 전용 프로필에서는 데이터를 추가/수정할 수 없습니다.',
   ERR_DB_LOCKED: '데이터베이스가 잠겨 있습니다.',
   ERR_READONLY_DELETE: '읽기 전용 프로필에서는 데이터를 삭제할 수 없습니다.',
   ERR_DB_INSTANCE_MISSING: '저장할 데이터베이스 인스턴스가 존재하지 않습니다.',
-  ERR_EXTERNAL_DB_WRITE_FAILED: '외부 데이터베이스 파일 쓰기 실패: {path} ({detail})',
-  ERR_MOBILE_DB_SAVE_ABSOLUTE_UNSUPPORTED: '모바일 환경에서는 절대 경로의 외부 데이터베이스 파일을 저장할 수 없습니다.',
 };
 
 export default ko;

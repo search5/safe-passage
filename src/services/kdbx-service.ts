@@ -1,24 +1,8 @@
-import { App, normalizePath, Platform } from 'obsidian';
+import { App, normalizePath } from 'obsidian';
 import * as kdbxweb from 'kdbxweb';
 import { argon2id, argon2d, argon2i } from 'hash-wasm';
 import { ProfileConfig, KeePassEntryInfo } from '../types';
 import { t } from '../i18n/i18n';
-
-export function isAbsolutePath(path: string): boolean {
-  return path.startsWith('/') || /^[a-zA-Z]:\\/.test(path) || /^[a-zA-Z]:\//.test(path);
-}
-
-async function getFs(): Promise<typeof import('fs') | null> {
-  // esbuild.config.mjs가 Node 내장 모듈을 external로 빼두었기 때문에,
-  // 동적 import('fs')는 번들에 포함되지 않고 데스크톱 런타임의 실제 Node 모듈로 해석됨
-  if (!Platform.isDesktop) return null;
-  try {
-    return await import('fs');
-  } catch (e) {
-    console.error("[SafePassage] fs 모듈 동적 로드 실패:", e);
-    return null;
-  }
-}
 
 // WebAssembly 기반 Argon2 구현체 등록
 kdbxweb.CryptoEngine.setArgon2Impl(
@@ -51,50 +35,19 @@ export class KdbxService {
   }
 
   async unlock(profile: ProfileConfig, password: string): Promise<void> {
-    let dbData: ArrayBuffer;
-    const fsModule = await getFs();
-
-    if (isAbsolutePath(profile.databasePath) && fsModule) {
-      try {
-        const buffer = await fsModule.promises.readFile(profile.databasePath);
-        dbData = buffer.buffer as ArrayBuffer;
-      } catch (err) {
-        throw new Error(t('ERR_EXTERNAL_DB_READ_FAILED', {
-          path: profile.databasePath,
-          detail: err instanceof Error ? err.message : String(err)
-        }));
-      }
-    } else {
-      // 절대 경로인데 fsModule이 없다면 (즉 모바일) 에러 처리
-      if (isAbsolutePath(profile.databasePath)) {
-        throw new Error(t('ERR_MOBILE_DB_ABSOLUTE_UNSUPPORTED'));
-      }
-      const dbFile = this.app.vault.getFileByPath(normalizePath(profile.databasePath));
-      if (!dbFile) {
-        throw new Error(t('ERR_DB_NOT_FOUND', { path: profile.databasePath }));
-      }
-      dbData = await this.app.vault.readBinary(dbFile);
+    const dbFile = this.app.vault.getFileByPath(normalizePath(profile.databasePath));
+    if (!dbFile) {
+      throw new Error(t('ERR_DB_NOT_FOUND', { path: profile.databasePath }));
     }
+    const dbData = await this.app.vault.readBinary(dbFile);
 
     let keyFileData: ArrayBuffer | undefined;
     if (profile.keyFilePath) {
-      if (isAbsolutePath(profile.keyFilePath) && fsModule) {
-        try {
-          const buffer = await fsModule.promises.readFile(profile.keyFilePath);
-          keyFileData = buffer.buffer as ArrayBuffer;
-        } catch {
-          throw new Error(t('ERR_EXTERNAL_KEYFILE_READ_FAILED', { path: profile.keyFilePath }));
-        }
-      } else {
-        if (isAbsolutePath(profile.keyFilePath)) {
-          throw new Error(t('ERR_MOBILE_KEYFILE_ABSOLUTE_UNSUPPORTED'));
-        }
-        const keyFile = this.app.vault.getFileByPath(normalizePath(profile.keyFilePath));
-        if (!keyFile) {
-          throw new Error(t('ERR_KEYFILE_NOT_FOUND', { path: profile.keyFilePath }));
-        }
-        keyFileData = await this.app.vault.readBinary(keyFile);
+      const keyFile = this.app.vault.getFileByPath(normalizePath(profile.keyFilePath));
+      if (!keyFile) {
+        throw new Error(t('ERR_KEYFILE_NOT_FOUND', { path: profile.keyFilePath }));
       }
+      keyFileData = await this.app.vault.readBinary(keyFile);
     }
 
     const credentials = new kdbxweb.KdbxCredentials(
@@ -229,28 +182,12 @@ export class KdbxService {
     if (!db) throw new Error(t('ERR_DB_INSTANCE_MISSING'));
 
     const buffer = await db.save();
-    const fsModule = await getFs();
-
-    if (isAbsolutePath(databasePath) && fsModule) {
-      try {
-        const nodeBuffer = Buffer.from(buffer);
-        await fsModule.promises.writeFile(databasePath, nodeBuffer);
-      } catch (err) {
-        throw new Error(t('ERR_EXTERNAL_DB_WRITE_FAILED', {
-          path: databasePath,
-          detail: err instanceof Error ? err.message : String(err)
-        }));
-      }
+    const normalizedPath = normalizePath(databasePath);
+    const existing = this.app.vault.getFileByPath(normalizedPath);
+    if (existing) {
+      await this.app.vault.modifyBinary(existing, buffer);
     } else {
-      if (isAbsolutePath(databasePath)) {
-        throw new Error(t('ERR_MOBILE_DB_SAVE_ABSOLUTE_UNSUPPORTED'));
-      }
-      const existing = this.app.vault.getFileByPath(normalizePath(databasePath));
-      if (existing) {
-        await this.app.vault.modifyBinary(existing, buffer);
-      } else {
-        await this.app.vault.createBinary(databasePath, buffer);
-      }
+      await this.app.vault.createBinary(normalizedPath, buffer);
     }
   }
 

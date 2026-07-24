@@ -7,9 +7,7 @@ SafePassage is a secure, lightweight, and high-performance KeePass integration p
 ## ✨ Key Features
 
 - **High-Performance WebAssembly Engine**: Decrypts KeePass databases with blazing-fast speeds using WASM-based Argon2, ensuring zero UI freezing or Out-Of-Memory (OOM) crashes.
-- **Cross-Platform Compliance (Desktop & Mobile)**: 
-  - **Desktop**: Allows loading and saving `.kdbx` or Key files from any **local absolute path** outside your Obsidian Vault (using lazy-loaded NodeJS I/O).
-  - **Mobile (iOS/Android)**: Safely ignores desktop-only NodeJS dependencies to load databases via Vault-relative paths without runtime crashes.
+- **Cross-Platform Compliance (Desktop & Mobile)**: Database and key files are read and written through Obsidian's own Vault API, so the same Vault-relative paths work identically on desktop and mobile (iOS/Android).
 - **Secure Master Keyring**: Caches master passwords in protected session memory for automatic background unlocking when opening protected notes.
 - **Masked Inline Chips**: Automatically transforms `` `{{sp:profile/path#field}}` `` tags into elegant circular masking chips. Click to copy the secret value, with configurable clipboard auto-clear timeouts.
 - **Interactive Credential Tables**: Render entire credential groups using code blocks, complete with customizable titles and dynamic inline lookups.
@@ -25,8 +23,8 @@ SafePassage is a secure, lightweight, and high-performance KeePass integration p
    - Click **Add New Profile**.
    - Fill in:
      - **Profile Name**: A friendly identifier (e.g., `work-db`).
-     - **Database File Path**: The local absolute path (e.g., `/Users/username/Secure/vault.kdbx`).
-     - **Key File Path (Optional)**: Path to your `.key` or `.keyx` file.
+     - **Database File Path**: Path to your `.kdbx` file, relative to this vault (e.g., `Secrets/vault.kdbx`).
+     - **Key File Path (Optional)**: Path to your `.key` or `.keyx` file, relative to this vault.
      - **Session Expiry Lifetime**: Define when the memory session expires (e.g., Immediate lock, 5 minutes, 15 minutes, or forever).
 
 ---
