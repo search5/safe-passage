@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SafePassage 0.1.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 23:49+0900\n"
+"POT-Creation-Date: 2026-08-01 17:01+0900\n"
 "PO-Revision-Date: 2026-07-24 23:55+0900\n"
 "Last-Translator: Ji-ho Lee <search5@gmail.com>\n"
 "Language: ko\n"
@@ -19,51 +19,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../prerequisites.rst:2 42333d4eb8ee43bb9330fde035021c7c
+#: ../../prerequisites.rst:2 497c795208b6471da1159d5fd37d18da
 msgid "Prerequisites"
 msgstr "사전 요구사항"
 
-#: ../../prerequisites.rst:4 7790f3376a1c45a5be0457a30a464fd1
+#: ../../prerequisites.rst:4 adf5147e37444c10aa76ec329ce12405
 msgid "Before installing **SafePassage**, make sure the following are in place:"
 msgstr "**SafePassage** 를 설치하기 전에 다음 사항을 준비해 주세요:"
 
-#: ../../prerequisites.rst:6 60de288f7e0d4c6bb1aa429aa2b9ec27
+#: ../../prerequisites.rst:6 0fc52fcb5faa4c46a865369ffe0cdc9a
 msgid ""
 "`Obsidian <https://obsidian.md>`_ desktop or mobile app, version "
-"``1.12.7`` or later."
-msgstr ""
-"버전 ``1.12.7`` 이상의 `Obsidian <https://obsidian.md>`_ 데스크톱 또는 모바"
-"일 앱."
+"``1.13.4`` or later."
+msgstr "버전 ``1.13.4`` 이상의 `Obsidian <https://obsidian.md>`_ 데스크톱 또는 모바일 앱."
 
-#: ../../prerequisites.rst:8 9bee3887ad3d4bf994d52ddbbaa35f03
+#: ../../prerequisites.rst:8 f068deb1940c4536a33f634ced669857
 msgid ""
 "A KeePass database file (``.kdbx``) containing the credentials you want "
 "to reference from your notes, and optionally a key file (``.key`` / "
 "``.keyx``)."
 msgstr ""
-"노트에서 참조하고자 하는 자격 증명이 담긴 KeePass 데이터베이스 파일"
-"(``.kdbx``), 그리고 필요한 경우 키 파일(``.key`` / ``.keyx``)."
+"노트에서 참조하고자 하는 자격 증명이 담긴 KeePass 데이터베이스 파일(``.kdbx``), 그리고 필요한 경우 키 "
+"파일(``.key`` / ``.keyx``)."
 
-#: ../../prerequisites.rst:11 37dab05fba6c473ba15a5f12d6ef8b43
+#: ../../prerequisites.rst:11 2033138ec6e04df48943306d9df881d1
 msgid ""
 "The database file (and key file, if any) must live inside your Obsidian "
 "vault, since SafePassage reads and writes them through Obsidian's own "
 "Vault API using vault-relative paths. This is also what makes the same "
 "configuration work identically on desktop and mobile."
 msgstr ""
-"SafePassage는 데이터베이스 파일(및 키 파일)을 Obsidian 자체 Vault API를 통"
-"해 볼트 기준 상대 경로로 읽고 쓰기 때문에, 이 파일들은 반드시 Obsidian 볼"
-"트 안에 있어야 합니다. 바로 이 방식 덕분에 동일한 설정이 데스크톱과 모바일"
-"에서 똑같이 동작합니다."
+"SafePassage는 데이터베이스 파일(및 키 파일)을 Obsidian 자체 Vault API를 통해 볼트 기준 상대 경로로 읽고"
+" 쓰기 때문에, 이 파일들은 반드시 Obsidian 볼트 안에 있어야 합니다. 바로 이 방식 덕분에 동일한 설정이 데스크톱과 "
+"모바일에서 똑같이 동작합니다."
 
-#: ../../prerequisites.rst:15 a90bf9d5c5c0439ba6a3b7b5297402b2
+#: ../../prerequisites.rst:15 e3783a4c925d45a5be73bf660a03eaa1
 msgid ""
 "If you plan to install from source instead of from Obsidian's Community "
 "Plugins browser, `Node.js <https://nodejs.org/>`_ 18 or later."
 msgstr ""
-"Obsidian 커뮤니티 플러그인 브라우저 대신 소스에서 직접 설치할 계획이라면, "
-"`Node.js <https://nodejs.org/>`_ 18 이상."
+"Obsidian 커뮤니티 플러그인 브라우저 대신 소스에서 직접 설치할 계획이라면, `Node.js "
+"<https://nodejs.org/>`_ 18 이상."
 
-#: ../../prerequisites.rst:18 5d310215426647058b7b698150352fb9
+#: ../../prerequisites.rst:18 a95424eee82d4f20b5d9cc059e753bb3
 msgid "Once these are available, continue to :doc:`installation`."
 msgstr "준비가 끝났다면 :doc:`installation` 으로 이동하세요."
+

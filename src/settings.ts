@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, PluginSettingTab, Setting, SettingDefinitionItem } from 'obsidian';
 import SafePassagePlugin from './main';
 import { ProfileConfig, SessionDuration } from './types';
 import { t } from './i18n/i18n';
@@ -11,65 +11,88 @@ export class SafePassageSettingTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
-  display(): void {
-    const { containerEl } = this;
-    containerEl.empty();
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      // 0. 설정 탭 제목
+      { type: 'group', heading: t('SETTINGS_TITLE') },
 
-    new Setting(containerEl).setName(t('SETTINGS_TITLE')).setHeading();
+      // 1. 전역 보안 설정
+      {
+        type: 'group',
+        heading: t('GLOBAL_SECURITY_SETTINGS'),
+        items: [
+          {
+            name: t('CLIPBOARD_TIMEOUT'),
+            desc: t('CLIPBOARD_TIMEOUT_DESC'),
+            render: (setting) => {
+              setting.addText(text => text
+                .setPlaceholder('60')
+                .setValue(String(this.plugin.settings.clipboardClearSeconds))
+                .onChange(async (value) => {
+                  const num = Number(value);
+                  this.plugin.settings.clipboardClearSeconds = isNaN(num) ? 60 : num;
+                  await this.plugin.saveSettings();
+                }));
+            },
+          },
+          {
+            name: t('KEYRING_ENABLE'),
+            desc: t('KEYRING_ENABLE_DESC'),
+            render: (setting) => {
+              setting.addToggle(toggle => toggle
+                .setValue(this.plugin.settings.keyringEnabled)
+                .onChange(async (value) => {
+                  this.plugin.settings.keyringEnabled = value;
+                  if (!value) {
+                    this.plugin.keyringService.clear();
+                  }
+                  await this.plugin.saveSettings();
+                }));
+            },
+          },
+        ],
+      },
 
-    // 1. 전역 보안 설정
-    new Setting(containerEl).setName(t('GLOBAL_SECURITY_SETTINGS')).setHeading();
+      // 2. 프로필 목록
+      {
+        type: 'group',
+        heading: t('DATABASE_PROFILES'),
+        items: [
+          {
+            name: t('DATABASE_PROFILES'),
+            searchable: false,
+            render: (setting) => {
+              // 프로필 카드 목록과 추가 버튼은 개별 Setting 행이 아닌
+              // 하나의 커스텀 섹션으로 렌더링한다.
+              setting.settingEl.empty();
 
-    new Setting(containerEl)
-      .setName(t('CLIPBOARD_TIMEOUT'))
-      .setDesc(t('CLIPBOARD_TIMEOUT_DESC'))
-      .addText(text => text
-        .setPlaceholder('60')
-        .setValue(String(this.plugin.settings.clipboardClearSeconds))
-        .onChange(async (value) => {
-          const num = Number(value);
-          this.plugin.settings.clipboardClearSeconds = isNaN(num) ? 60 : num;
-          await this.plugin.saveSettings();
-        }));
+              const profileContainer = setting.settingEl.createDiv({ cls: 'kpn-profile-list' });
+              this.renderProfiles(profileContainer);
 
-    new Setting(containerEl)
-      .setName(t('KEYRING_ENABLE'))
-      .setDesc(t('KEYRING_ENABLE_DESC'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.keyringEnabled)
-        .onChange(async (value) => {
-          this.plugin.settings.keyringEnabled = value;
-          if (!value) {
-            this.plugin.keyringService.clear();
-          }
-          await this.plugin.saveSettings();
-        }));
-
-    // 2. 프로필 목록
-    new Setting(containerEl).setName(t('DATABASE_PROFILES')).setHeading();
-
-    const profileContainer = containerEl.createDiv({ cls: 'kpn-profile-list' });
-    this.renderProfiles(profileContainer);
-
-    // 새 프로필 추가 버튼
-    new Setting(containerEl)
-      .addButton(btn => btn
-        .setButtonText(t('ADD_NEW_PROFILE'))
-        .setCta()
-        .onClick(async () => {
-          const newId = `profile-${Date.now()}`;
-          const newProfile: ProfileConfig = {
-            id: newId,
-            name: t('DEFAULT_PROFILE_NAME'),
-            databasePath: '',
-            isReadOnly: true,
-            managedByKeyring: false,
-            sessionDuration: '5min',
-          };
-          this.plugin.settings.profiles[newId] = newProfile;
-          await this.plugin.saveSettings();
-          this.display(); // UI 리프레시
-        }));
+              // 새 프로필 추가 버튼
+              new Setting(setting.settingEl)
+                .addButton(btn => btn
+                  .setButtonText(t('ADD_NEW_PROFILE'))
+                  .setCta()
+                  .onClick(async () => {
+                    const newId = `profile-${Date.now()}`;
+                    const newProfile: ProfileConfig = {
+                      id: newId,
+                      name: t('DEFAULT_PROFILE_NAME'),
+                      databasePath: '',
+                      isReadOnly: true,
+                      managedByKeyring: false,
+                      sessionDuration: '5min',
+                    };
+                    this.plugin.settings.profiles[newId] = newProfile;
+                    await this.plugin.saveSettings();
+                    this.update(); // UI 리프레시
+                  }));
+            },
+          },
+        ],
+      },
+    ];
   }
 
   private renderProfiles(container: HTMLElement) {
@@ -160,12 +183,12 @@ export class SafePassageSettingTab extends PluginSettingTab {
       new Setting(profileDiv)
         .addButton(btn => btn
           .setButtonText(t('DELETE_PROFILE'))
-          .setWarning()
+          .setDestructive()
           .onClick(async () => {
             delete this.plugin.settings.profiles[profile.id];
             this.plugin.kdbxService.lock(profile.id);
             await this.plugin.saveSettings();
-            this.display();
+            this.update();
           }));
     }
   }

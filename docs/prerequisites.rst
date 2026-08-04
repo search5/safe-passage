@@ -4,7 +4,7 @@ Prerequisites
 Before installing **SafePassage**, make sure the following are in place:
 
 - `Obsidian <https://obsidian.md>`_ desktop or mobile app, version
-  ``1.12.7`` or later.
+  ``1.13.4`` or later.
 - A KeePass database file (``.kdbx``) containing the credentials you want to
   reference from your notes, and optionally a key file (``.key`` /
   ``.keyx``).
