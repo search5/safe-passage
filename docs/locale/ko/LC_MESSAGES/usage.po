@@ -114,6 +114,19 @@ msgstr "노트 어디에든 백틱으로 감싼 자격 증명 토큰을 삽입�
 msgid "The token format is ``{{sp:<profile>/<entry-path>#<field>}}``."
 msgstr "토큰 형식은 ``{{sp:<프로필>/<항목 경로>#<필드>}}`` 입니다."
 
+#: ../../usage.rst:47 3f8f6a2e4b1a4dcabf2a5f0f1c9d8b12
+msgid ""
+"The ``<profile>`` segment is the profile's internal ID rather than its "
+"display name — SafePassage inserts it automatically when you save a "
+"secret (see *Inserting new credentials* below), so you never type it by "
+"hand. Because it's the ID and not the name, renaming a profile later "
+"doesn't break tokens that were already inserted."
+msgstr ""
+"``<profile>`` 부분은 프로필의 표시 이름이 아니라 내부 ID입니다 — 비밀 정보"
+"를 저장할 때 SafePassage가 자동으로 삽입해 주므로(아래 *새 자격 증명 삽입"
+"하기* 참고) 직접 입력할 일은 없습니다. 이름이 아닌 ID이기 때문에, 나중에 "
+"프로필 이름을 바꿔도 이미 삽입된 토큰은 깨지지 않습니다."
+
 #: ../../usage.rst:47 6ba7cbc40b0a406996a6082a811dfcf6
 msgid ""
 "**Locked state**: renders as ``work-db: Twitter#Password (🔒)``. Click it "

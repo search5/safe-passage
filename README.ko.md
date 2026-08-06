@@ -43,6 +43,8 @@ My twitter password is `{{sp:work-db/SNS/Twitter#Password}}` and the username is
 - **잠금 상태**: `work-db: Twitter#Password (🔒)` 형태로 표시됩니다. 클릭하면 비밀번호 잠금 해제 모달이 열립니다.
 - **잠금 해제 상태**: 마스킹된 칩(`••••••••`)으로 표시됩니다. 클릭하면 값이 클립보드에 복사됩니다.
 
+> **참고:** `work-db` 부분은 프로필의 표시 이름이 아니라 내부 ID입니다 — 비밀 정보를 저장할 때 SafePassage가 자동으로 삽입해 주므로 직접 입력할 일은 없습니다. 이름이 아닌 ID이기 때문에, 나중에 프로필 이름을 변경해도 이미 삽입된 토큰은 깨지지 않습니다.
+
 ### 2. 자격 증명 표
 `safe-passage` 마크다운 코드 블록을 사용해 구조화된 표를 렌더링합니다:
 ```yaml

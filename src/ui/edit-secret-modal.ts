@@ -263,7 +263,7 @@ export class EditSecretModal extends Modal {
       // 에디터 컨텍스트에서 실행된 경우 토큰 자동 삽입
       if (this.editor) {
         // 기본값으로 Password 필드 토큰 생성 및 백틱(`)으로 감싸기
-        const token = `\`{{sp:${profile.name}/${this.entryPath}#Password}}\``;
+        const token = `\`{{sp:${profile.id}/${this.entryPath}#Password}}\``;
         this.editor.replaceSelection(token);
         new Notice(t('SUCCESS_SAVE_TOKEN'));
       } else {

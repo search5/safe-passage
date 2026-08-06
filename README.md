@@ -43,6 +43,8 @@ My twitter password is `{{sp:work-db/SNS/Twitter#Password}}` and the username is
 - **Locked State**: Shows as `work-db: Twitter#Password (🔒)`. Click to open the password unlock modal.
 - **Unlocked State**: Displays as a masked chip (`••••••••`). Click to copy the value to your clipboard.
 
+> **Note:** The `work-db` segment is the profile's internal ID, not its display name — SafePassage inserts it automatically when you save a secret (see below), so you never type it by hand. Because it's the ID rather than the name, renaming a profile later won't break tokens that were already inserted.
+
 ### 2. Credential Tables
 Use the `safe-passage` markdown code blocks to render structured tables:
 ```yaml

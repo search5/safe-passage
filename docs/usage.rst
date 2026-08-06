@@ -44,6 +44,12 @@ Insert credential tokens anywhere in your note wrapped in backticks:
 
 The token format is ``{{sp:<profile>/<entry-path>#<field>}}``.
 
+The ``<profile>`` segment is the profile's internal ID rather than its
+display name — SafePassage inserts it automatically when you save a secret
+(see *Inserting new credentials* below), so you never type it by hand.
+Because it's the ID and not the name, renaming a profile later doesn't
+break tokens that were already inserted.
+
 - **Locked state**: renders as ``work-db: Twitter#Password (🔒)``. Click it
   to open the unlock modal and enter the database's master password.
 - **Unlocked state**: renders as a masked chip (``••••••••``). Click it to

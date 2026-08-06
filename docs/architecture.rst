@@ -75,7 +75,11 @@ the same ``KdbxService``:
 
 - Inline tokens (``{{sp:<profile>/<entry>#<field>}}``) are matched by a
   CodeMirror decoration in Live Preview and by a Markdown post-processor in
-  Reading view, both rendering the same masked chip component.
+  Reading view, both rendering the same masked chip component. The
+  ``<profile>`` segment is resolved by profile ID first, falling back to a
+  name match — newly-inserted tokens always use the ID, which keeps them
+  working even if the profile is later renamed, while tokens written before
+  this change continue to resolve via the name fallback.
 - ``safe-passage`` fenced code blocks are handled by a dedicated block
   processor that parses the YAML body and renders a full credential table.
 

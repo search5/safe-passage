@@ -21,7 +21,11 @@ A chip shows "Missing Profile" or "Missing Entry"
 
 - **Missing Profile** means the ``<profile>`` segment of the
   ``{{sp:<profile>/<entry>#<field>}}`` token does not match any configured
-  profile ID. Check **Settings → SafePassage** for the exact profile name.
+  profile — checked first against profile IDs (what newly-inserted tokens
+  use), then against profile names as a fallback (for tokens inserted
+  before profiles started using IDs). Check **Settings → SafePassage** for
+  the profile's current name, or re-insert the token via **Insert Secret**
+  if you're not sure of its ID.
 - **Missing Entry** means the profile was found and unlocked, but no entry
   exists at the given group/title path. Entry paths are case-sensitive and
   must match the KeePass group structure exactly (e.g.
