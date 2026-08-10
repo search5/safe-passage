@@ -29,7 +29,11 @@ jobs:
             exit 1
           fi
 
-      - run: npm ci
+      # --legacy-peer-deps: vitest's @types/node peerOptional range (^20/^22/>=24) conflicts
+      # with this project's own @types/node@^16.11.6 devDependency. The conflict is type-only
+      # (peerOptional, not a real runtime dependency), so it's safe to bypass here the same way
+      # local installs do.
+      - run: npm ci --legacy-peer-deps
 
       - run: npm run build
 
