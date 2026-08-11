@@ -4,6 +4,19 @@ import { argon2id, argon2d, argon2i } from 'hash-wasm';
 import { ProfileConfig, KeePassEntryInfo } from '../types';
 import { t } from '../i18n/i18n';
 
+// {{sp:profileId/reference#Field}} 토큰의 reference 부분에서 UUID 참조를 명시적으로
+// 구분하기 위한 접두사. base64 패턴 추정 대신 이 접두사로만 판별한다.
+export const UUID_REFERENCE_PREFIX = 'uuid:';
+
+export function isUuidReference(reference: string): boolean {
+  return reference.startsWith(UUID_REFERENCE_PREFIX);
+}
+
+// groupPath(상위 그룹)와 title을 합쳐 사람이 읽을 수 있는 전체 경로를 만든다.
+export function fullEntryPath(entry: KeePassEntryInfo): string {
+  return entry.groupPath ? `${entry.groupPath}/${entry.title}` : entry.title;
+}
+
 // WebAssembly 기반 Argon2 구현체 등록
 kdbxweb.CryptoEngine.setArgon2Impl(
   async (password, salt, memory, iterations, length, parallelism, type, version) => {
@@ -67,11 +80,11 @@ export class KdbxService {
     this.activeDbs.clear();
   }
 
-  getEntry(profileId: string, entryPath: string): KeePassEntryInfo | null {
+  getEntry(profileId: string, reference: string): KeePassEntryInfo | null {
     const db = this.activeDbs.get(profileId);
     if (!db) return null;
 
-    const entry = this.resolveEntry(db, entryPath);
+    const entry = this.resolveEntry(db, reference);
     if (!entry) return null;
 
     return this.toEntryInfo(entry);
@@ -161,7 +174,7 @@ export class KdbxService {
     await this.saveDatabase(profile.id, profile.databasePath);
   }
 
-  async deleteEntry(profile: ProfileConfig, entryPath: string): Promise<boolean> {
+  async deleteEntry(profile: ProfileConfig, reference: string): Promise<boolean> {
     if (profile.isReadOnly) {
       throw new Error(t('ERR_READONLY_DELETE'));
     }
@@ -169,7 +182,7 @@ export class KdbxService {
     const db = this.activeDbs.get(profile.id);
     if (!db) return false;
 
-    const entry = this.resolveEntry(db, entryPath);
+    const entry = this.resolveEntry(db, reference);
     if (!entry) return false;
 
     db.remove(entry);
@@ -193,8 +206,16 @@ export class KdbxService {
 
   // ── 헬퍼 메서드들 ──────────────────────────────────────────────────────
 
-  private resolveEntry(db: kdbxweb.Kdbx, entryPath: string): kdbxweb.KdbxEntry | null {
-    const segments = entryPath.split('/');
+  private resolveEntry(db: kdbxweb.Kdbx, reference: string): kdbxweb.KdbxEntry | null {
+    if (isUuidReference(reference)) {
+      const targetId = reference.slice(UUID_REFERENCE_PREFIX.length);
+      for (const entry of db.getDefaultGroup().allEntries()) {
+        if (entry.uuid.id === targetId) return entry;
+      }
+      return null;
+    }
+
+    const segments = reference.split('/');
     const title = segments[segments.length - 1];
     const groupSegments = segments.slice(0, -1);
     const group = groupSegments.length
@@ -238,11 +259,22 @@ export class KdbxService {
     const url = fields.URL ?? '';
     const notes = fields.Notes ?? '';
 
+    // 루트 그룹(parentGroup이 없는 그룹) 바로 아래까지만 걸어 올라가 표시용 경로를 만든다.
+    const groupNames: string[] = [];
+    let group = entry.parentGroup;
+    while (group && group.parentGroup) {
+      groupNames.unshift(group.name ?? '');
+      group = group.parentGroup;
+    }
+    const groupPath = groupNames.join('/');
+
     return {
+      uuid: entry.uuid.id,
       title,
       userName,
       url,
       notes,
+      groupPath,
       fields,
       getPassword: () => {
         const passVal = entry.fields.get('Password');

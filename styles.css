@@ -183,4 +183,8 @@ code.sp-code-override.sp-code-override.sp-code-override {
   cursor: pointer;
 }
 
-
+/* 6. 엔트리 자동완성 후보의 보조 경로 표시 (entry-suggest.ts, token-editor-suggest.ts) */
+.sp-suggest-path {
+  font-size: 0.85em;
+  color: var(--text-muted);
+}

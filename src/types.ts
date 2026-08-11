@@ -18,10 +18,12 @@ export interface SafePassageSettings {
 }
 
 export interface KeePassEntryInfo {
+  uuid: string;
   title: string;
   userName: string;
   url: string;
   notes: string;
+  groupPath: string;
   fields: Record<string, string>;
   getPassword: () => string;
 }

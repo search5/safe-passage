@@ -11,6 +11,8 @@ import { buildEditorExtension, refreshChipsEffect, getActiveEditorViews } from '
 import { promptMasterPassword } from './ui/auth-modal';
 import { EditSecretModal } from './ui/edit-secret-modal';
 import { getProfileByIdOrName } from './ui/chip-component';
+import { TokenEditorSuggest } from './ui/token-editor-suggest';
+import { buildEntriesListKeymap } from './ui/entries-list-keymap';
 import { t } from './i18n/i18n';
 
 export default class SafePassagePlugin extends Plugin {
@@ -19,6 +21,11 @@ export default class SafePassagePlugin extends Plugin {
   sessionService!: SessionService;
   clipboardService!: ClipboardService;
   keyringService!: KeyringService;
+  // 같은 프로필을 참조하는 칩/표가 한 노트에 여럿 있으면, 첫 호출이 아직 암호 입력
+  // 중(진행 중)일 때 다른 요소를 클릭해 두 번째 호출이 들어올 수 있다. isUnlocked
+  // 체크만으로는 "진행 중"인 호출을 못 막으므로, 진행 중인 Promise를 프로필별로
+  // 캐싱해서 같이 기다리게 한다 — 그래야 암호 입력창이 중복으로 뜨지 않는다.
+  private unlockPromises: Map<string, Promise<boolean>> = new Map();
 
   async onload() {
     await this.loadSettings();
@@ -129,8 +136,10 @@ export default class SafePassagePlugin extends Plugin {
 
     // 렌더러 등록 (에디터 & 읽기 모드)
     this.registerEditorExtension(buildEditorExtension(this));
+    this.registerEditorExtension(buildEntriesListKeymap());
     registerBlockProcessor(this);
     registerInlineProcessor(this);
+    this.registerEditorSuggest(new TokenEditorSuggest(this));
   }
 
   onunload() {
@@ -150,6 +159,28 @@ export default class SafePassagePlugin extends Plugin {
   }
 
   async unlockProfile(profile: ProfileConfig): Promise<boolean> {
+    // 이미 잠금 해제된 프로필이면 다시 묻지 않는다.
+    if (this.kdbxService.isUnlocked(profile.id)) {
+      return true;
+    }
+
+    // 이미 이 프로필에 대한 unlock이 진행 중이면(암호 입력창이 떠 있는 등) 새로 시작하지
+    // 않고 그 결과를 같이 기다린다 — 그래야 암호 입력창이 중복으로 뜨지 않는다.
+    const inFlight = this.unlockPromises.get(profile.id);
+    if (inFlight) {
+      return inFlight;
+    }
+
+    const promise = this.performUnlock(profile);
+    this.unlockPromises.set(profile.id, promise);
+    try {
+      return await promise;
+    } finally {
+      this.unlockPromises.delete(profile.id);
+    }
+  }
+
+  private async performUnlock(profile: ProfileConfig): Promise<boolean> {
     // 1. 키링에 패스워드가 있으면 자동 잠금 해제 시도
     if (this.settings.keyringEnabled && profile.managedByKeyring) {
       const savedPass = this.keyringService.getPassword(profile.id);
@@ -172,7 +203,7 @@ export default class SafePassagePlugin extends Plugin {
 
     try {
       await this.kdbxService.unlock(profile, password);
-      
+
       // 키링 저장 설정 활성화 시 비밀번호 세션 보관
       if (this.settings.keyringEnabled && profile.managedByKeyring) {
         this.keyringService.savePassword(profile.id, password);

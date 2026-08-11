@@ -1,7 +1,8 @@
 import { setIcon } from 'obsidian';
 import SafePassagePlugin from '../main';
 import { t } from '../i18n/i18n';
-import { getProfileByIdOrName } from './chip-component';
+import { getProfileByIdOrName, getReferenceLabel } from './chip-component';
+import { fullEntryPath } from '../services/kdbx-service';
 
 interface BlockConfig {
   title?: string;
@@ -108,14 +109,15 @@ export function registerBlockProcessor(plugin: SafePassagePlugin): void {
       // 테이블 본문 생성
       const tbody = table.createEl('tbody');
 
-      for (const entryPath of config.entries) {
+      for (const reference of config.entries) {
         const row = tbody.createEl('tr');
-        
-        // 항목 열
-        const titleText = entryPath.split('/').pop() ?? entryPath;
-        row.createEl('td', { text: titleText });
 
-        const entry = plugin.kdbxService.getEntry(profile.id, entryPath);
+        const entry = plugin.kdbxService.getEntry(profile.id, reference);
+
+        // 항목 열: 그룹 아래 있는 엔트리도 구분할 수 있도록 전체 경로를 보여준다.
+        // resolve에 실패한 경우에만 원본 reference(또는 축약된 uuid)를 노출한다.
+        const titleText = entry ? fullEntryPath(entry) : getReferenceLabel(reference);
+        row.createEl('td', { text: titleText });
 
         for (const field of config.fields) {
           const td = row.createEl('td');
