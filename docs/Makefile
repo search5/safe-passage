@@ -35,7 +35,7 @@ html-ko: intl-build
 
 html-all: html-en html-ko
 	mkdir -p _build/html
-	printf '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=en/"></head><body>Redirecting to <a href="en/">English docs</a>...</body></html>' > _build/html/index.html
+	cp root-redirect.html _build/html/index.html
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
