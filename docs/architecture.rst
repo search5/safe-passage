@@ -73,7 +73,7 @@ Inline chip and table rendering
 Notes reference secrets through two mechanisms that both resolve against
 the same ``KdbxService``:
 
-- Inline tokens (``{{sp:<profile>/<entry>#<field>}}``) are matched by a
+- Inline tokens (``{{sp:<profile>/<reference>#<field>}}``) are matched by a
   CodeMirror decoration in Live Preview and by a Markdown post-processor in
   Reading view, both rendering the same masked chip component. The
   ``<profile>`` segment is resolved by profile ID first, falling back to a
@@ -87,3 +87,52 @@ Both paths only ever display a masked placeholder in the DOM; the
 underlying secret is fetched from ``KdbxService`` on demand — for example
 when the user clicks a chip to copy its value — rather than being embedded
 in the rendered HTML.
+
+UUID entry references
+--------------------------
+
+The ``<reference>`` segment of a token is either a ``Group/Path`` string or
+a ``uuid:<base64>`` string, disambiguated purely by the explicit ``uuid:``
+prefix rather than by guessing from the string's shape. ``KdbxService``
+branches on that prefix: a path reference walks the group tree exactly as
+before, while a UUID reference does a linear scan of every entry in the
+database (``KdbxGroup.allEntries()``) comparing ``entry.uuid.id``, since
+kdbxweb has no direct by-UUID lookup. Every entry KdbxService hands back to
+the UI also carries its ``uuid`` and ``groupPath`` (the entry's parent
+groups, computed by walking ``entry.parentGroup`` up to the database root),
+which is what lets chips and tables show an entry's full path instead of
+just its title, and lets the autocomplete UI build a ``uuid:`` reference
+without a second lookup.
+
+Entry autocomplete
+------------------------
+
+Three independent UIs surface the same entry search
+(``KdbxService.findEntries`` / ``getAllEntries``), because each one is
+triggered from a different context:
+
+- The Insert Secret modal's entry field uses Obsidian's
+  ``AbstractInputSuggest``, a plain-text-input autocomplete.
+- Typing ``{{sp:`` directly in a note uses Obsidian's ``EditorSuggest``
+  instead, since that's the API for autocomplete anchored to a position in
+  the document rather than a form field. A small set of pure functions
+  (``detectTriggerContext``, ``detectProfileFieldTrigger``,
+  ``findEntriesListTrigger``) parse only the text immediately around the
+  cursor to decide, on every keystroke, whether it's currently positioned
+  in the profile, reference, or field segment of a token — or in a
+  ``safe-passage`` code block's ``profile:`` field or ``entries:`` list —
+  entirely without touching the editor, which keeps them unit-testable and
+  cheap to call on every keystroke as ``EditorSuggest.onTrigger`` requires.
+- The same ``EditorSuggest`` also intercepts Enter at the end of an
+  ``entries:`` list item with a high-precedence CodeMirror keymap, because
+  Obsidian's own list auto-indent otherwise treats the code fence's
+  ``-``-prefixed lines as a real Markdown list and adds two extra spaces of
+  indentation on every line — code fence contents aren't supposed to be
+  indent-aware at all.
+
+Since a profile can be referenced by more than one chip or table in the
+same note, and each renders its own independent "click to unlock" handler,
+``SafePassagePlugin.unlockProfile`` de-duplicates concurrent calls for the
+same profile ID behind a single shared in-flight ``Promise`` — otherwise,
+clicking a second locked element while the first one's password prompt is
+still open would open a second, redundant prompt.

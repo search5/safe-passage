@@ -42,7 +42,7 @@ Insert credential tokens anywhere in your note wrapped in backticks:
    My twitter password is `{{sp:work-db/SNS/Twitter#Password}}` and the
    username is `{{sp:work-db/SNS/Twitter#UserName}}`.
 
-The token format is ``{{sp:<profile>/<entry-path>#<field>}}``.
+The token format is ``{{sp:<profile>/<reference>#<field>}}``.
 
 The ``<profile>`` segment is the profile's internal ID rather than its
 display name — SafePassage inserts it automatically when you save a secret
@@ -52,8 +52,51 @@ break tokens that were already inserted.
 
 - **Locked state**: renders as ``work-db: Twitter#Password (🔒)``. Click it
   to open the unlock modal and enter the database's master password.
-- **Unlocked state**: renders as a masked chip (``••••••••``). Click it to
-  copy the value to your clipboard.
+- **Unlocked state**: renders as a masked chip showing the entry's full
+  path, e.g. ``Finance/API/Stripe (Password)``. Click it to copy the value
+  to your clipboard.
+
+Referencing entries by UUID
+--------------------------------
+
+The ``<reference>`` segment can be either a path (``Group/SubGroup/Title``)
+or a KeePass entry's UUID, prefixed with ``uuid:``:
+
+.. code-block:: text
+
+   {{sp:work-db/uuid:Yhz3AjkUmk+HQu5+w2xdWQ==#Password}}
+
+Every KeePass entry has a UUID that never changes, even when the entry is
+renamed or moved to a different group. A UUID reference therefore survives
+database reorganization, while a path reference breaks as soon as the entry
+moves. The ``uuid:`` prefix is required — it's what lets SafePassage tell
+path references and UUID references apart unambiguously — and existing
+path-based tokens keep working exactly as before; nothing needs to be
+migrated.
+
+Since a UUID isn't something you'd type by hand, SafePassage never expects
+you to write one directly — see *Autocomplete* below.
+
+Autocomplete
+-----------------
+
+Typing a token by hand only gets you as far as the profile and field names
+you already remember; SafePassage fills in the rest as you type, in three
+places:
+
+- **Insert Secret modal**: the entry field suggests existing entries (title
+  and full path) as you type. Picking a suggestion fills in the matching
+  entry's path, and the token inserted after saving defaults to a UUID
+  reference for that entry.
+- **Directly in a note**: typing ``{{sp:`` triggers a chained
+  autocomplete — first the profile (by ID or name), then, after ``/``, the
+  entry (by title, showing its full path), then, after ``#``, the field
+  name. Picking an entry inserts a UUID reference and automatically types
+  the next separator (``/``, ``#``, or the closing ``}}``) for you. If the
+  target profile is locked, the suggestion list shows a lock entry that
+  unlocks it in place instead of coming up empty.
+- **``safe-passage`` code blocks**: the same autocomplete applies to the
+  ``profile:`` field and to items under ``entries:``.
 
 Credential tables
 --------------------
@@ -69,11 +112,13 @@ entries at once:
    fields: [UserName, Password, URL]
    entries:
      - SSH-Prod/[Prod] bastion
-     - AWS/Admin
+     - uuid:Yhz3AjkUmk+HQu5+w2xdWQ==
    ```
 
 This renders a table with one column per field in ``fields`` and a copy
-button for every entry.
+button for every entry. Entries can mix path references and UUID
+references freely, and both the ``profile:`` field and each line under
+``entries:`` support the autocomplete described above.
 
 Inserting new credentials
 -----------------------------
