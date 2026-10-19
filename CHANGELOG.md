@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.1.13] - 2026-10-19
+
 ### Added
 
 - Autocomplete now matches KeePass group names and paths, not just entry
