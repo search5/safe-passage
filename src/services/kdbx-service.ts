@@ -95,19 +95,20 @@ export class KdbxService {
     if (!db) return [];
 
     const results: KeePassEntryInfo[] = [];
-    const lowerQuery = query.toLowerCase();
+    // 공백으로 나눈 모든 단어가 제목/사용자명/URL/그룹 경로 중 어딘가에 들어 있어야 매칭한다.
+    // 그래서 "credentials for server" 같은 다단어 그룹명이나 "그룹 제목" 조합도 찾을 수 있다.
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
     const root = db.getDefaultGroup();
 
     for (const entry of root.allEntries()) {
-      const title = this.fieldText(entry.fields.get('Title')) ?? '';
-      const userName = this.fieldText(entry.fields.get('UserName')) ?? '';
-      const url = this.fieldText(entry.fields.get('URL')) ?? '';
+      const haystack = [
+        this.fieldText(entry.fields.get('Title')) ?? '',
+        this.fieldText(entry.fields.get('UserName')) ?? '',
+        this.fieldText(entry.fields.get('URL')) ?? '',
+        this.groupPathOf(entry),
+      ].join('\n').toLowerCase();
 
-      if (
-        title.toLowerCase().includes(lowerQuery) ||
-        userName.toLowerCase().includes(lowerQuery) ||
-        url.toLowerCase().includes(lowerQuery)
-      ) {
+      if (terms.every(term => haystack.includes(term))) {
         results.push(this.toEntryInfo(entry));
       }
     }
@@ -259,14 +260,7 @@ export class KdbxService {
     const url = fields.URL ?? '';
     const notes = fields.Notes ?? '';
 
-    // 루트 그룹(parentGroup이 없는 그룹) 바로 아래까지만 걸어 올라가 표시용 경로를 만든다.
-    const groupNames: string[] = [];
-    let group = entry.parentGroup;
-    while (group && group.parentGroup) {
-      groupNames.unshift(group.name ?? '');
-      group = group.parentGroup;
-    }
-    const groupPath = groupNames.join('/');
+    const groupPath = this.groupPathOf(entry);
 
     return {
       uuid: entry.uuid.id,
@@ -284,6 +278,17 @@ export class KdbxService {
         return typeof passVal === 'string' ? passVal : '';
       }
     };
+  }
+
+  // 루트 그룹(parentGroup이 없는 그룹) 바로 아래까지만 걸어 올라가 표시용 경로를 만든다.
+  private groupPathOf(entry: kdbxweb.KdbxEntry): string {
+    const groupNames: string[] = [];
+    let group = entry.parentGroup;
+    while (group && group.parentGroup) {
+      groupNames.unshift(group.name ?? '');
+      group = group.parentGroup;
+    }
+    return groupNames.join('/');
   }
 
   private fieldText(value: string | kdbxweb.ProtectedValue | undefined): string | undefined {

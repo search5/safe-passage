@@ -103,3 +103,42 @@ describe('KdbxService uuid references', () => {
     expect(originalGroup?.entries).not.toContain(entry);
   });
 });
+
+describe('KdbxService.findEntries', () => {
+  function setup() {
+    const { db } = createTestDb();
+    const group = db.createGroup(db.getDefaultGroup(), 'credentials for server');
+    const nested = db.createGroup(group, 'Prod DB');
+    const a = db.createEntry(nested);
+    a.fields.set('Title', 'root login');
+    const b = db.createEntry(group);
+    b.fields.set('Title', 'ssh key');
+    return createTestService('p1', db);
+  }
+
+  it('matches entries by group name, including multi-word names', () => {
+    const titles = setup().findEntries('p1', 'credentials for server').map(e => e.title).sort();
+
+    expect(titles).toEqual(['root login', 'ssh key']);
+  });
+
+  it('matches a partial group path across nested groups', () => {
+    const titles = setup().findEntries('p1', 'server/prod').map(e => e.title);
+
+    expect(titles).toEqual(['root login']);
+  });
+
+  it('requires every word to match, in any order, across title and group', () => {
+    const service = setup();
+
+    expect(service.findEntries('p1', 'prod root').map(e => e.title)).toEqual(['root login']);
+    expect(service.findEntries('p1', 'prod ssh')).toEqual([]);
+  });
+
+  it('keeps matching by title and username', () => {
+    const service = setup();
+
+    expect(service.findEntries('p1', 'openai').map(e => e.title)).toEqual(['OpenAI']);
+    expect(service.findEntries('p1', 'me@example').map(e => e.title)).toEqual(['OpenAI']);
+  });
+});

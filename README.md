@@ -64,6 +64,7 @@ Since nobody types a UUID by hand, SafePassage suggests entries wherever a refer
 - The **Insert Secret** modal's entry field suggests existing entries (title + full path) as you type.
 - Typing `{{sp:` directly in a note triggers a chained autocomplete: profile → entry → field, automatically inserting the next separator as you go. If the target profile is locked, the suggestion list offers a one-click unlock instead of coming up empty.
 - The same autocomplete applies to the `profile:` field and `entries:` list items inside `safe-passage` code blocks.
+- Searching matches the group name and path as well as the title, username and URL, and accepts several words (in any order): typing `credentials for server` lists the entries inside that group.
 
 ### 4. Credential Tables
 Use the `safe-passage` markdown code blocks to render structured tables:

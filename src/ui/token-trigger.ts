@@ -11,7 +11,8 @@ export interface TriggerContext {
 const OPEN = '{{sp:';
 
 // 커서 앞 한 줄 텍스트만으로 현재 {{sp:profileId/reference#field}} 토큰의 어느 단계를
-// 작성 중인지 판별하는 순수 함수. Obsidian 의존성이 없어 vitest로 직접 테스트한다.
+// 작성 중인지 판별하는 순수 함수. reference/field 단계의 검색어는 다단어 그룹명·필드명을
+// 위해 공백을 허용하고(`}}`로 닫히면 종료), profile 단계만 공백을 토큰 종료로 본다. Obsidian 의존성이 없어 vitest로 직접 테스트한다.
 export function detectTriggerContext(lineTextBeforeCursor: string): TriggerContext | null {
   const openIdx = lineTextBeforeCursor.lastIndexOf(OPEN);
   if (openIdx === -1) return null;
@@ -26,7 +27,6 @@ export function detectTriggerContext(lineTextBeforeCursor: string): TriggerConte
     if (slashIdx === -1) return null;
 
     const query = afterOpen.slice(hashIdx + 1);
-    if (/\s/.test(query)) return null;
 
     return {
       stage: 'field',
@@ -40,7 +40,6 @@ export function detectTriggerContext(lineTextBeforeCursor: string): TriggerConte
   const slashIdx = afterOpen.indexOf('/');
   if (slashIdx !== -1) {
     const query = afterOpen.slice(slashIdx + 1);
-    if (/\s/.test(query)) return null;
 
     return {
       stage: 'reference',
@@ -140,7 +139,7 @@ export function findEntriesListTrigger(
 ): EntriesListTrigger | null {
   if (!isEntriesListLine(lines, lineIndex)) return null;
 
-  const itemMatch = lineTextBeforeCursor.match(/^(\s*-\s*)(\S*)$/);
+  const itemMatch = lineTextBeforeCursor.match(/^(\s*-\s*)(.*)$/);
   if (!itemMatch) return null;
 
   const bounds = findSafePassageBlockBounds(lines, lineIndex);

@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Autocomplete now matches KeePass group names and paths, not just entry
+  title/username/URL, and supports multi-word queries: every
+  space-separated word must match somewhere in the entry's title, username,
+  URL or group path (any order). Typing `credentials for server` lists the
+  entries under that group, with the full path shown to tell similarly named
+  groups apart. Applies to the Insert Secret modal, inline `{{sp:...}}`
+  tokens, and `entries:` list items.
+
+### Changed
+
+- The autocomplete query in the reference and field stages of a
+  `{{sp:...}}` token, and in `entries:` list items, may now contain spaces
+  (the popup closes once the token is closed with `}}`). The profile stage
+  still ends at the first space.
+
 ## [0.1.12] - 2026-08-12
 
 ### Added

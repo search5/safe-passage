@@ -44,12 +44,27 @@ describe('detectTriggerContext', () => {
     expect(detectTriggerContext('{{sp:hello world')).toBeNull();
   });
 
-  it('returns null when the reference-stage query contains whitespace', () => {
-    expect(detectTriggerContext('{{sp:p1/hello world')).toBeNull();
+  it('keeps whitespace in the reference-stage query for multi-word group names', () => {
+    expect(detectTriggerContext('{{sp:p1/credentials for server')).toEqual({
+      stage: 'reference',
+      profileId: 'p1',
+      query: 'credentials for server',
+      start: 8,
+    });
   });
 
-  it('returns null when the field-stage query contains whitespace', () => {
-    expect(detectTriggerContext('{{sp:p1/Fin#hello world')).toBeNull();
+  it('keeps whitespace in the field-stage query', () => {
+    expect(detectTriggerContext('{{sp:p1/Fin#hello world')).toEqual({
+      stage: 'field',
+      profileId: 'p1',
+      reference: 'Fin',
+      query: 'hello world',
+      start: 12,
+    });
+  });
+
+  it('returns null once a whitespace-containing token has been closed', () => {
+    expect(detectTriggerContext('{{sp:p1/credentials for server#Password}} and')).toBeNull();
   });
 
   it('returns null for a malformed field stage with no profileId/reference separator', () => {
@@ -151,10 +166,14 @@ describe('findEntriesListTrigger', () => {
     expect(findEntriesListTrigger(lines, 0, '- Open')).toBeNull();
   });
 
-  it('returns null when the query contains whitespace', () => {
-    const lines = ['```safe-passage', 'entries:', '  - Open AI'];
+  it('keeps whitespace in the query for multi-word group names', () => {
+    const lines = ['```safe-passage', 'profile: p1', 'entries:', '  - Open AI'];
 
-    expect(findEntriesListTrigger(lines, 2, '  - Open AI')).toBeNull();
+    expect(findEntriesListTrigger(lines, 3, '  - Open AI')).toEqual({
+      query: 'Open AI',
+      start: 4,
+      profileId: 'p1',
+    });
   });
 
   it('returns null for a non-list line inside the entries: section', () => {
